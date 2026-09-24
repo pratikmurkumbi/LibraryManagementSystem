@@ -1,4 +1,4 @@
-# Government Polytechnic Haliyal - Digital Library Management System
+#  Digital Library Management System
 
 Flask + SQLite college library management system.
 
