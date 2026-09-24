@@ -1,0 +1,5 @@
+{% extends "base.html" %}{% set title=event.title %}{% set page_title=event.title %}
+{% block content %}<div class="modern-page"><div class="event-detail-card">
+{% if event.image_filename %}<img class="event-detail-image" src="{{url_for('static',filename='uploads/events/'+event.image_filename)}}" alt="{{event.title}}">{% endif %}
+<div class="event-detail-body"><span class="lp-badge">🎉 College Event</span><h2>{{event.title}}</h2><div class="event-detail-meta">📅 {{event.event_date}} {% if event.event_time %} · ⏰ {{event.event_time}}{% endif %} {% if event.venue %} · 📍 {{event.venue}}{% endif %}</div><p>{{event.description or 'No description provided.'}}</p>{% if event.video_filename %}<div class="event-video-wrap"><video controls preload="metadata"><source src="{{url_for('static',filename='uploads/events/'+event.video_filename)}}"></video></div>{% endif %}<a class="button" href="javascript:history.back()">← Back</a></div>
+</div></div>{% endblock %}

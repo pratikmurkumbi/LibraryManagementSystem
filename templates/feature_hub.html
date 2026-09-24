@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="legacy-page unified-page">
+<div class="feature-page">
+
+    <div class="feature-header">
+
+        <h1>📊 {{ title }}</h1>
+
+        <p>
+            Government Polytechnic Haliyal Library Management System
+        </p>
+
+    </div>
+
+    <div class="feature-grid">
+
+        {% for icon, name, link in features %}
+
+        <a href="{{ link }}" class="feature-card">
+
+            <div class="feature-icon">
+                {{ icon }}
+            </div>
+
+            <h3>
+                {{ name }}
+            </h3>
+
+            <p>
+                Open {{ name }}
+            </p>
+
+        </a>
+
+        {% endfor %}
+
+    </div>
+
+    <a href="/admin" class="back-button">
+        ← Back to Admin Dashboard
+    </a>
+
+</div>
+</div>
+{% endblock %}

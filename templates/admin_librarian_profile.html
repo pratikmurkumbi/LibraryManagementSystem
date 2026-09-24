@@ -1,0 +1,7 @@
+{% extends "base.html" %}
+{% set title='Librarian Profile' %}
+{% block content %}
+<div class="legacy-page unified-page">
+<div class="dashboard"><h1>👨‍💼 Librarian Profile</h1><div class="card"><h2>{{ librarian.full_name }}</h2><p><b>Username:</b> {{ librarian.username }}</p><p><b>Employee ID:</b> {{ librarian.employee_id }}</p><p><b>Email:</b> {{ librarian.email or '-' }}</p><p><b>Phone:</b> {{ librarian.phone or '-' }}</p></div><a class="button" href="/admin/librarians">← Back</a></div>
+</div>
+{% endblock %}

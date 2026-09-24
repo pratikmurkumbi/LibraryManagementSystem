@@ -1,0 +1,13 @@
+{% extends "base.html" %}{% set title='Edit Student' %}{% set page_title='Edit Student' %}
+{% block content %}<div class="modern-page"><div class="panel form-panel"><h2>✏️ Edit Student</h2><p>Update student account, contact and academic details.</p>{% if error %}<div class="error">{{ error }}</div>{% endif %}<form method="POST"><div class="form-grid">
+<div><label>Full Name</label><input type="text" name="full_name" value="{{ student.full_name or '' }}" required></div>
+<div><label>Username</label><input type="text" name="username" value="{{ student.username or '' }}" required></div>
+<div><label>Reset Password</label><input type="password" name="password" minlength="10" placeholder="Leave blank to keep current"></div>
+<div><label>Register / Roll Number</label><input type="text" name="roll_no" value="{{ student.roll_no or '' }}" required></div>
+<div><label>Course</label><input type="text" name="course" value="{{ student.course or '' }}" required></div>
+<div><label>Department</label><input type="text" name="department" value="{{ student.department or '' }}"></div>
+<div><label>Semester</label><select name="semester"><option value="">Select</option>{% for n in range(1,9) %}<option value="{{n}}" {% if student.semester == n %}selected{% endif %}>Semester {{n}}</option>{% endfor %}</select></div>
+<div><label>Academic Year</label><input type="text" name="academic_year" value="{{ student.academic_year or '2026-27' }}"></div>
+<div><label>Email</label><input type="email" name="email" value="{{ student.email or '' }}"></div>
+<div><label>Phone</label><input type="tel" name="phone" value="{{ student.phone or '' }}"></div>
+</div><button type="submit">💾 Save Changes</button></form><a class="button" href="{{ url_for('manage_students') }}">← Back to Students</a></div></div>{% endblock %}

@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+{% set title='Invite Students' %}
+{% block content %}
+<div class="legacy-page unified-page">
+<div class="invite-box">
+
+    <div class="invite-icon">🔗</div>
+
+    <h1>Invite Students</h1>
+
+    <p>
+        Share this registration link with students.
+    </p>
+
+    <input
+        id="inviteLink"
+        class="invite-link"
+        type="text"
+        value="{{ invite_link }}"
+        readonly
+    >
+
+    <button class="invite-button"
+            onclick="copyInviteLink()">
+        📋 Copy Invite Link
+    </button>
+
+    <button class="invite-button"
+            onclick="shareInviteLink()">
+        📤 Share
+    </button>
+
+    <p id="message"></p>
+
+    <br>
+
+    <a href="{{ url_for('admin_dashboard') }}">
+        ← Back to Admin Dashboard
+    </a>
+
+</div>
+
+<script>
+function copyInviteLink() {
+    const link = document.getElementById("inviteLink").value;
+
+    navigator.clipboard.writeText(link).then(function() {
+        document.getElementById("message").innerText =
+            "✅ Invite link copied!";
+    });
+}
+
+function shareInviteLink() {
+    const link = document.getElementById("inviteLink").value;
+
+    if (navigator.share) {
+        navigator.share({
+            title: "Library Student Registration",
+            text: "Register for the Government Polytechnic Haliyal Library.",
+            url: link
+        });
+    } else {
+        copyInviteLink();
+        alert("Invite link copied. You can paste it into WhatsApp.");
+    }
+}
+</script>
+</div>
+{% endblock %}

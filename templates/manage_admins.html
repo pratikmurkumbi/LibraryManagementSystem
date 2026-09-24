@@ -1,0 +1,120 @@
+{% extends "base.html" %}
+{% set title='Admin Management' %}
+{% block content %}
+<div class="legacy-page unified-page">
+<div class="dashboard">
+
+    <h1>👥 Admin Management</h1>
+
+    {% if error %}
+    <div class="error">{{ error }}</div>
+    {% endif %}
+
+    {% if success %}
+    <div class="success">{{ success }}</div>
+    {% endif %}
+
+
+    <div class="card">
+
+        <h2>➕ Add Administrator</h2>
+
+        <form method="POST">
+
+            <input type="hidden"
+                   name="action"
+                   value="add">
+
+            <label>Full Name</label>
+
+            <input
+                type="text"
+                name="full_name"
+                required
+            >
+
+            <label>Username</label>
+
+            <input
+                type="text"
+                name="username"
+                required
+            >
+
+            <label>Password</label>
+
+            <input
+                type="password"
+                name="password"
+                required
+            >
+
+            <button type="submit">
+                ➕ Add Admin
+            </button>
+
+        </form>
+
+    </div>
+
+
+    <div class="card">
+
+        <h2>👥 Current Administrators</h2>
+
+        {% for admin in admins %}
+
+        <div style="
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+            gap:10px;
+            padding:12px;
+            border-bottom:1px solid #ddd;
+        ">
+
+            <div>
+                <strong>{{ admin.full_name }}</strong>
+                <br>
+                <small>{{ admin.username }}</small>
+            </div>
+
+            {% if admin.id != session.get("user_id") %}
+
+            <form method="POST">
+
+                <input type="hidden"
+                       name="action"
+                       value="remove">
+
+                <input type="hidden"
+                       name="admin_id"
+                       value="{{ admin.id }}">
+
+                <button type="submit"
+                        onclick="return confirm('Remove this administrator?')">
+                    🗑️ Remove
+                </button>
+
+            </form>
+
+            {% else %}
+
+            <strong>Current Admin</strong>
+
+            {% endif %}
+
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+
+    <a class="button" href="/admin">
+        ← Back to Dashboard
+    </a>
+
+</div>
+</div>
+{% endblock %}

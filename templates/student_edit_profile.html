@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+{% set title='Edit My Profile' %}
+{% block content %}
+<div class="legacy-page unified-page">
+<div class="dashboard edit-profile-box edit-animation">
+
+    <h1>✏️ Edit My Profile</h1>
+
+    {% if error %}
+        <div class="error">{{ error }}</div>
+    {% endif %}
+
+    {% if student.profile_image %}
+
+        <img
+            class="current-photo"
+            src="{{ url_for('static', filename='uploads/students/' + student.profile_image) }}"
+            alt="Current Profile Photo">
+
+    {% else %}
+
+        <div style="font-size:80px;text-align:center;margin:15px;">
+            👨‍🎓
+        </div>
+
+    {% endif %}
+
+    <form method="POST" enctype="multipart/form-data">
+
+        <label>Full Name</label>
+        <input
+            type="text"
+            name="full_name"
+            value="{{ student.full_name }}"
+            required>
+
+        <label>Username</label>
+        <input
+            type="text"
+            value="{{ student.username }}"
+            disabled>
+
+        <label>Roll Number</label>
+        <input
+            type="text"
+            value="{{ student.roll_no }}"
+            disabled>
+
+        <label>Course</label>
+        <input
+            type="text"
+            name="course"
+            value="{{ student.course }}"
+            required>
+
+        <label>Semester</label>
+        <select name="semester" required>
+
+            {% for n in range(1, 7) %}
+
+                <option value="{{ n }}"
+                    {% if student.semester == n %}selected{% endif %}>
+                    Semester {{ n }}
+                </option>
+
+            {% endfor %}
+
+        </select>
+
+        <label>Academic Year</label>
+        <input
+            type="text"
+            name="academic_year"
+            value="{{ student.academic_year }}"
+            placeholder="Example: 2026-27"
+            required>
+
+        <label>Profile Photo</label>
+        <input
+            type="file"
+            name="profile_image"
+            accept=".jpg,.jpeg,.png,.webp">
+
+        <br><br>
+
+        <button type="submit" class="login-button">
+            💾 Save Changes
+        </button>
+
+    </form>
+
+    <br>
+
+    <a href="{{ url_for('repaired_student_profile') }}">
+        ← Cancel
+    </a>
+
+</div>
+</div>
+{% endblock %}

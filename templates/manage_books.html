@@ -1,0 +1,8 @@
+{% extends "base.html" %}{% set title='Manage Books' %}{% set page_title='Manage Books' %}
+{% block content %}<div class="modern-page"><div class="section-head"><div><h2>📚 Book Management</h2><p>Catalog, search, cover images, quantities and borrowing availability.</p></div><a class="btn" href="{{ url_for('add_book') }}">➕ Add New Book</a></div>
+{% if error %}<div class="error">{{ error }}</div>{% endif %}
+<div class="book-grid">{% for book in books %}<article class="book-card">
+{% if book.image %}<img src="{{ url_for('static', filename='uploads/books/' + book.image) }}" class="book-image" alt="{{ book.title }}" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">{% endif %}<div class="book-icon" {% if book.image %}style="display:none"{% endif %}>📖</div>
+<h3>{{ book.title }}</h3><p><strong>Author:</strong> {{ book.author }}</p><p><strong>Category:</strong> {{ book.category or 'Not specified' }}</p><p><strong>ISBN:</strong> {{ book.isbn or 'Not specified' }}</p><p><strong>Available:</strong> {{ book.quantity }}</p>
+<div class="book-actions"><a href="{{ url_for('edit_book',book_id=book.id) }}" class="edit-button">✏️ Edit</a><form method="POST" action="{{ url_for('delete_book',book_id=book.id) }}" onsubmit="return confirm('Delete this book?')"><button type="submit" class="delete-button">🗑️ Delete</button></form></div>
+</article>{% else %}<div class="panel empty" style="grid-column:1/-1"><h3>📚 No Books Found</h3><p>Add the first book to your catalog.</p></div>{% endfor %}</div></div>{% endblock %}

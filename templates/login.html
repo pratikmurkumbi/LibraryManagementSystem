@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Government Polytechnic Haliyal Library Management System</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body class="login-modern">
+<div class="login-card">
+  <div class="login-campus-photo"><img src="{{ url_for('static', filename='images/backgrounds/college-campus-1.jpg') }}" alt="Government Polytechnic Haliyal campus"></div>
+  <div class="login-brand">
+    <div class="login-college">Government Polytechnic Haliyal</div>
+    <h1>Library Management System</h1>
+    <p>Smart Library Portal</p>
+  </div>
+
+  {% if error %}<div class="alert">{{ error }}</div>{% endif %}
+  {% if message %}<div class="success">{{ message }}</div>{% endif %}
+
+  <form class="login-form" method="POST">
+    <label>Username</label>
+    <input name="username" autocomplete="username" placeholder="Enter your username" required>
+    <label>Password</label>
+    <input type="password" name="password" autocomplete="current-password" placeholder="Enter your password" required>
+    <button type="submit">Login to Library →</button>
+  </form>
+
+  <div class="login-links">
+    <a href="/forgot-password">Forgot Password?</a>
+    <span>•</span>
+    <a href="/student/register">New student? Create account</a>
+  </div>
+  <div class="login-footer">Government Polytechnic Haliyal · Library Management System</div>
+</div>
+</body>
+</html>

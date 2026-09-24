@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+{% set title='Add New Book' %}
+{% block content %}
+
+<div class="dashboard">
+
+    <h1>📚 Add New Book</h1>
+
+    {% if error %}<div class="error">{{ error }}</div>{% endif %}
+    <p class="page-subtitle">
+        Add a new book to the library
+    </p>
+
+    <div class="card form-card">
+
+        <form method="POST"
+              enctype="multipart/form-data">
+
+            <label>Book Image</label>
+
+            <input
+                type="file"
+                name="image"
+                accept="image/*"
+                capture="environment"
+            >
+
+            <small>
+                📷 Use Camera or 🖼️ Choose from Gallery
+            </small>
+
+            <br><br>
+
+            <label>Book Title</label>
+
+            <input
+                type="text"
+                name="title"
+                placeholder="Enter book title"
+                required
+            >
+
+            <label>Author</label>
+
+            <input
+                type="text"
+                name="author"
+                placeholder="Enter author name"
+                required
+            >
+
+            <label>Category</label>
+
+            <input
+                type="text"
+                name="category"
+                placeholder="Enter category"
+            >
+
+            <label>ISBN</label>
+
+            <input
+                type="text"
+                name="isbn"
+                placeholder="Enter ISBN"
+            >
+
+            <label>Quantity</label>
+
+            <input
+                type="number"
+                name="quantity"
+                min="1"
+                value="1"
+                required
+            >
+
+            <button type="submit">
+                ➕ Add Book
+            </button>
+
+        </form>
+
+    </div>
+
+    <br>
+
+    <a class="button" href="/admin/books">
+        ← Back to Books
+    </a>
+
+</div>
+{% endblock %}

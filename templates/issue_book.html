@@ -1,0 +1,656 @@
+{% extends "base.html" %}
+{% set title='Issue Book' %}
+{% block content %}
+<div class="dashboard">
+
+    <h1>📖 Issue Book</h1>
+
+    <p class="page-subtitle">
+        Issue books to students
+    </p>
+
+
+    {% if error %}
+
+        <div class="error">
+            {{ error }}
+        </div>
+
+    {% endif %}
+
+
+    {% if approved_reservations %}
+
+    <div class="card" style="margin-bottom:25px;">
+
+        <h2>🔖 Approved Reservations</h2>
+
+        <p class="page-subtitle">
+            Students with approved reservations
+        </p>
+
+        <div style="overflow-x:auto;">
+
+            <table>
+
+                <tr>
+                    <th>Book</th>
+                    <th>Student</th>
+                    <th>Roll No</th>
+                    <th>Reserved On</th>
+                    <th>Action</th>
+                </tr>
+
+
+                {% for reservation in approved_reservations %}
+
+                <tr>
+
+                    <td>
+
+                        <strong>
+                            {{ reservation.title }}
+                        </strong>
+
+                        <br>
+
+                        <small>
+                            {{ reservation.author }}
+                        </small>
+
+                    </td>
+
+
+                    <td>
+                        {{ reservation.full_name }}
+                    </td>
+
+
+                    <td>
+                        {{ reservation.roll_no }}
+                    </td>
+
+
+                    <td>
+                        {{ reservation.reservation_date }}
+                    </td>
+
+
+                    <td>
+
+                        <button
+                            type="button"
+                            class="button"
+                            onclick="selectReservation(
+                                '{{ reservation.book_id }}',
+                                '{{ reservation.student_id }}'
+                            )"
+                        >
+                            📖 Select
+                        </button>
+
+                    </td>
+
+                </tr>
+
+                {% endfor %}
+
+            </table>
+
+        </div>
+
+    </div>
+
+    {% endif %}
+
+
+
+    <div class="card" id="issue-form">
+
+        <h2>📚 Issue Book</h2>
+
+
+        <form method="POST">
+
+
+            <label>🔎 Search Book</label>
+
+<input
+    type="text"
+    id="book_search"
+    placeholder="Search by book title or author..."
+    autocomplete="off"
+    style="width:100%;box-sizing:border-box;margin-bottom:10px;"
+>
+
+<div id="book_search_results"></div>
+
+<select name="book_id" id="book_id" required style="margin-top:10px;">
+    <option value="">Select a book</option>
+
+    {% for book in books %}
+    <option
+        value="{{ book.id }}"
+        data-search="{{ (book.title ~ ' ' ~ book.author)|lower }}"
+    >
+        {{ book.title }} - {{ book.author }}
+        ({{ book.quantity }} available)
+    </option>
+    {% endfor %}
+</select>
+
+
+
+            <h3 style="margin-top:25px;">
+                👨‍🎓 Find Student
+            </h3>
+
+
+            <div class="filter-grid">
+
+
+                <div>
+
+                    <label>
+                        Branch
+                    </label>
+
+                    <select id="branch_filter">
+
+                        <option value="">
+                            All Branches
+                        </option>
+
+                        <option value="CSE">
+                            CSE
+                        </option>
+
+                        <option value="AET">
+                            AET
+                        </option>
+
+                        <option value="AM">
+                            AM
+                        </option>
+
+                        <option value="AT">
+                            AT
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <div>
+
+                    <label>
+                        Semester
+                    </label>
+
+                    <select id="semester_filter">
+
+                        <option value="">
+                            All Semesters
+                        </option>
+
+                        <option value="1">
+                            Semester 1
+                        </option>
+
+                        <option value="2">
+                            Semester 2
+                        </option>
+
+                        <option value="3">
+                            Semester 3
+                        </option>
+
+                        <option value="4">
+                            Semester 4
+                        </option>
+
+                        <option value="5">
+                            Semester 5
+                        </option>
+
+                        <option value="6">
+                            Semester 6
+                        </option>
+
+                    </select>
+
+                </div>
+
+            </div>
+
+
+
+            <label style="margin-top:15px;">
+                Academic Year
+            </label>
+
+            <input
+                type="text"
+                id="year_filter"
+                placeholder="Example: 2026-27"
+            >
+
+
+
+            <label>
+                Search Student
+            </label>
+
+            <input
+                type="text"
+                id="student_search"
+                placeholder="Enter student name or roll number"
+                autocomplete="off"
+            >
+
+
+            <div id="student_results"></div>
+
+
+
+            <input
+                type="hidden"
+                name="student_id"
+                id="student_id"
+                required
+            >
+
+
+
+            <div
+                id="selected_student"
+                class="selected-student"
+            >
+
+                <div
+                    id="selected_name"
+                    class="selected-student-name"
+                ></div>
+
+                <div
+                    id="selected_details"
+                    style="margin-top:6px;"
+                ></div>
+
+            </div>
+
+
+
+            <label style="margin-top:20px;">
+                Due Date
+            </label>
+
+            <input
+                type="date"
+                name="due_date"
+                required
+            >
+
+
+
+            <button type="submit">
+                📖 Issue Book
+            </button>
+
+
+        </form>
+
+    </div>
+
+
+
+    <br>
+
+
+    <a
+        class="button"
+        href="/librarian"
+    >
+        ← Back to Dashboard
+    </a>
+
+
+</div>
+
+
+
+<script>
+
+const students = [
+
+{% for student in students %}
+
+{
+    id: {{ student.id|tojson }},
+    name: {{ student.full_name|tojson }},
+    roll: {{ student.roll_no|tojson }},
+    branch: {{ (student.department or student.course or '')|tojson }},
+    semester: {{ (student.semester or '')|tojson }},
+    year: {{ (student.academic_year or '')|tojson }}
+},
+
+{% endfor %}
+
+];
+
+
+const searchInput =
+    document.getElementById("student_search");
+
+const results =
+    document.getElementById("student_results");
+
+const branchFilter =
+    document.getElementById("branch_filter");
+
+const semesterFilter =
+    document.getElementById("semester_filter");
+
+const yearFilter =
+    document.getElementById("year_filter");
+
+const studentId =
+    document.getElementById("student_id");
+
+const selectedStudent =
+    document.getElementById("selected_student");
+
+
+function searchStudents() {
+
+    const search =
+        searchInput.value.trim().toLowerCase();
+
+    const branch =
+        branchFilter.value.toLowerCase();
+
+    const semester =
+        semesterFilter.value;
+
+    const year =
+        yearFilter.value.trim().toLowerCase();
+
+
+    results.innerHTML = "";
+
+
+    if (
+        !search &&
+        !branch &&
+        !semester &&
+        !year
+    ) {
+
+        return;
+
+    }
+
+
+    const matches = students.filter(student => {
+
+        const name =
+            String(student.name || "").toLowerCase();
+
+        const roll =
+            String(student.roll || "").toLowerCase();
+
+        const studentBranch =
+            String(student.branch || "").toLowerCase();
+
+        const studentSemester =
+            String(student.semester || "");
+
+        const studentYear =
+            String(student.year || "").toLowerCase();
+
+
+        const searchMatch =
+            !search ||
+            name.includes(search) ||
+            roll.includes(search);
+
+
+        const branchMatch =
+            !branch ||
+            studentBranch === branch;
+
+
+        const semesterMatch =
+            !semester ||
+            studentSemester === semester;
+
+
+        const yearMatch =
+            !year ||
+            studentYear.includes(year);
+
+
+        return (
+            searchMatch &&
+            branchMatch &&
+            semesterMatch &&
+            yearMatch
+        );
+
+    });
+
+
+    if (matches.length === 0) {
+
+        results.innerHTML =
+            '<div style="padding:14px;color:#777;">No student found.</div>';
+
+        return;
+
+    }
+
+
+    matches.forEach(student => {
+
+        const item =
+            document.createElement("div");
+
+        item.className =
+            "student-result";
+
+
+        item.innerHTML = `
+
+            <div class="student-result-name">
+                ${student.name}
+            </div>
+
+            <div class="student-result-details">
+
+                Roll No: ${student.roll}
+
+                &nbsp; | &nbsp;
+
+                Branch: ${student.branch || "-"}
+
+                &nbsp; | &nbsp;
+
+                Semester: ${student.semester || "-"}
+
+                &nbsp; | &nbsp;
+
+                Year: ${student.year || "-"}
+
+            </div>
+
+        `;
+
+
+        item.onclick = function() {
+
+            studentId.value =
+                student.id;
+
+
+            searchInput.value =
+                student.name + " - " + student.roll;
+
+
+            document.getElementById(
+                "selected_name"
+            ).textContent =
+                student.name;
+
+
+            document.getElementById(
+                "selected_details"
+            ).textContent =
+
+                "Roll No: " + student.roll +
+
+                " | Branch: " +
+                (student.branch || "-") +
+
+                " | Semester: " +
+                (student.semester || "-") +
+
+                " | Academic Year: " +
+                (student.year || "-");
+
+
+            selectedStudent.style.display =
+                "block";
+
+
+            results.innerHTML = "";
+
+        };
+
+
+        results.appendChild(item);
+
+    });
+
+}
+
+
+searchInput.addEventListener(
+    "input",
+    searchStudents
+);
+
+branchFilter.addEventListener(
+    "change",
+    searchStudents
+);
+
+semesterFilter.addEventListener(
+    "change",
+    searchStudents
+);
+
+yearFilter.addEventListener(
+    "input",
+    searchStudents
+);
+
+
+
+function selectReservation(
+    bookId,
+    studentIdValue
+) {
+
+    document.getElementById(
+        "book_id"
+    ).value = bookId;
+
+
+    const student =
+        students.find(
+            s => String(s.id) === String(studentIdValue)
+        );
+
+
+    if (student) {
+
+        studentId.value =
+            student.id;
+
+
+        searchInput.value =
+            student.name + " - " + student.roll;
+
+
+        document.getElementById(
+            "selected_name"
+        ).textContent =
+            student.name;
+
+
+        document.getElementById(
+            "selected_details"
+        ).textContent =
+
+            "Roll No: " + student.roll +
+
+            " | Branch: " +
+            (student.branch || "-") +
+
+            " | Semester: " +
+            (student.semester || "-") +
+
+            " | Academic Year: " +
+            (student.year || "-");
+
+
+        selectedStudent.style.display =
+            "block";
+
+    }
+
+
+    document.getElementById(
+        "issue-form"
+    ).scrollIntoView({
+        behavior: "smooth"
+    });
+
+}
+
+</script>
+
+
+
+<script>
+
+window.addEventListener(
+    "load",
+    function() {
+
+        const loader =
+            document.getElementById(
+                "page-loader"
+            );
+
+        if (loader) {
+
+            setTimeout(
+                function() {
+
+                    loader.classList.add(
+                        "hide"
+                    );
+
+                },
+                350
+            );
+
+        }
+
+    }
+);
+
+</script>
+{% endblock %}

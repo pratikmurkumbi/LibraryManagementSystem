@@ -1,0 +1,7 @@
+{% extends "base.html" %}
+{% set title='Students' %}
+{% block content %}
+<div class="legacy-page unified-page">
+<div class="dashboard"><h1>👨‍🎓 Students</h1><p class="page-subtitle">View students and their library details.</p><a class="button" href="/librarian/students/add">➕ Add Student</a>{% if students %}<div style="overflow-x:auto;margin-top:20px"><table><tr><th>Name</th><th>Roll No</th><th>Course</th><th>Semester</th><th>Department</th></tr>{% for s in students %}<tr><td>{{ s.full_name }}</td><td>{{ s.roll_no }}</td><td>{{ s.course }}</td><td>{{ s.semester or '-' }}</td><td>{{ s.department or '-' }}</td></tr>{% endfor %}</table></div>{% else %}<div class="card"><h3>No Students Found</h3></div>{% endif %}<br><a href="/librarian">← Back to Dashboard</a></div>
+</div>
+{% endblock %}

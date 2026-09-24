@@ -1,0 +1,7 @@
+{% extends "base.html" %}
+{% set title='Student Profile' %}
+{% block content %}
+<div class="legacy-page unified-page">
+<div class="dashboard"><h1>👨‍🎓 Student Profile</h1><div class="card"><h2>{{ student.full_name }}</h2><p><b>Username:</b> {{ student.username }}</p><p><b>Roll No:</b> {{ student.roll_no }}</p><p><b>Course:</b> {{ student.course }}</p><p><b>Semester:</b> {{ student.semester or "-" }}</p><p><b>Academic Year:</b> {{ student.academic_year or "-" }}</p><p><b>Department:</b> {{ student.department or "-" }}</p><p><b>Email:</b> {{ student.email or "-" }}</p><p><b>Phone:</b> {{ student.phone or "-" }}</p></div><div class="card"><h2>📚 Book History</h2>{% if books %}<div style="overflow-x:auto"><table><tr><th>Book</th><th>Issue</th><th>Due</th><th>Return</th><th>Status</th><th>Fine</th></tr>{% for b in books %}<tr><td>{{ b.title }}</td><td>{{ b.issue_date }}</td><td>{{ b.due_date or '-' }}</td><td>{{ b.return_date or '-' }}</td><td>{{ b.status }}</td><td>₹{{ b.fine or 0 }}</td></tr>{% endfor %}</table></div>{% else %}<p>No book history.</p>{% endif %}</div><a class="button" href="/admin/students">← Back</a></div>
+</div>
+{% endblock %}

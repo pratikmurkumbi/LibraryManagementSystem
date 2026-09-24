@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% set title='Add Admin' %}
+{% block content %}
+<div class="legacy-page unified-page">
+<div class="dashboard">
+
+<div class="card" style="max-width:550px;margin:auto;">
+
+<h1>👤 Add New Admin</h1>
+
+<p class="page-subtitle">
+Create another administrator account.
+</p>
+
+{% if error %}
+<div class="error">{{ error }}</div>
+{% endif %}
+
+{% if success %}
+<div class="success">{{ success }}</div>
+{% endif %}
+
+<form method="POST">
+
+<label>Full Name</label>
+<input type="text" name="full_name" required>
+
+<label>Username</label>
+<input type="text" name="username" required>
+
+<label>Email</label>
+<input type="email" name="email">
+
+<label>Phone Number</label>
+<input type="tel" name="phone">
+
+<label>Password</label>
+<input type="password" name="password" minlength="6" required>
+
+<button type="submit">
+➕ Create Admin
+</button>
+
+</form>
+
+<br>
+
+<a class="button" href="/admin">
+← Back to Dashboard
+</a>
+
+</div>
+
+</div>
+</div>
+{% endblock %}

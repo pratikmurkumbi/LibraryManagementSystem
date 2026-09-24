@@ -1,0 +1,24 @@
+FRESH DATABASE + FIRST ADMIN
+
+This version intentionally ships WITHOUT library.db.
+The application creates a fresh SQLite database automatically when it starts.
+
+WINDOWS
+1. Open Command Prompt in the project folder.
+2. Run:
+   python create_admin.py admin admin123 "Library Administrator"
+3. Start the application:
+   python app.py
+4. Open http://127.0.0.1:5000
+
+TERMUX / ANDROID
+cd ~/LibraryManagementSystem
+python create_admin.py admin admin123 "Library Administrator"
+python app.py
+Then open http://127.0.0.1:5000
+
+Replace admin123 with your own password. Password must be at least 6 characters.
+
+To reset the database later:
+python reset_database.py
+Then create the first admin again with create_admin.py.

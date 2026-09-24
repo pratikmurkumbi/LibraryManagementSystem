@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+{% set title='My Admin Profile' %}
+{% block content %}
+<div class="legacy-page unified-page">
+<div class="dashboard">
+
+<div class="card profile-box">
+
+<h1 style="text-align:center;">👤 My Admin Profile</h1>
+
+{% if user.profile_image %}
+
+<img
+class="profile-photo"
+src="{{ url_for('static', filename='uploads/admins/' + user.profile_image) }}"
+>
+
+{% else %}
+
+<div class="profile-placeholder">
+👤
+</div>
+
+{% endif %}
+
+<div class="profile-name">
+{{ user.full_name }}
+</div>
+
+<form method="POST" enctype="multipart/form-data">
+
+<label>Profile Photo</label>
+
+<input
+type="file"
+name="profile_image"
+accept="image/*"
+>
+
+<label>Full Name</label>
+
+<input
+type="text"
+name="full_name"
+value="{{ user.full_name or '' }}"
+required
+>
+
+<label>Email</label>
+
+<input
+type="email"
+name="email"
+value="{{ user.email or '' }}"
+placeholder="admin@example.com"
+>
+
+<label>Phone Number</label>
+
+<input
+type="tel"
+name="phone"
+value="{{ user.phone or '' }}"
+placeholder="Enter phone number"
+>
+
+<button type="submit">
+💾 Save Profile
+</button>
+
+</form>
+
+<br>
+
+<a class="button" href="/admin">
+← Back to Dashboard
+</a>
+
+</div>
+
+</div>
+</div>
+{% endblock %}

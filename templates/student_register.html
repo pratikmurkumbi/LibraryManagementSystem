@@ -1,0 +1,15 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Student Registration</title><link rel="stylesheet" href="{{ url_for('static',filename='css/style.css') }}"></head>
+<body class="login-modern"><div class="login-card auth-card"><div class="login-brand"><div class="logo"><img src="{{ url_for('static',filename='images/college-logo-placeholder.svg') }}" alt="College logo"></div><div class="login-college">Government Polytechnic Haliyal</div><h1>Student Registration</h1><p>Library Management System</p></div>
+{% if error %}<div class="alert">{{error}}</div>{% endif %}
+<form method="POST" enctype="multipart/form-data">
+<label>Full Name</label><input name="full_name" required>
+<label>Register Number</label><input name="roll_no" required>
+<label>Course</label><input name="course" required>
+<label>Semester</label><select name="semester" required>{% for n in range(1,7) %}<option value="{{n}}">Semester {{n}}</option>{% endfor %}</select>
+<label>Academic Year</label><input name="academic_year" placeholder="2026-27" required>
+<label>Username</label><input name="username" required>
+<label>Password</label><input type="password" name="password" minlength="6" required>
+<label>Confirm Password</label><input type="password" name="confirm_password" minlength="6" required>
+<label>Profile Photo</label><input type="file" name="profile_image" accept=".jpg,.jpeg,.png,.webp">
+<button type="submit">Create Student Account →</button>
+</form><div class="login-links"><a href="/login">← Back to Login</a></div></div></body></html>

@@ -1,0 +1,121 @@
+{% extends "base.html" %}
+{% set title='Edit Book' %}
+{% block content %}
+
+<div class="dashboard">
+
+    <h1>✏️ Edit Book</h1>
+
+    {% if error %}<div class="error">{{ error }}</div>{% endif %}
+    <p class="page-subtitle">
+        Update book information
+    </p>
+
+    <div class="card form-card">
+
+        <form method="POST"
+              enctype="multipart/form-data">
+
+            {% if book.image %}
+
+            <label>Current Book Image</label>
+
+            <img
+                src="{{ url_for('static', filename='uploads/books/' + book.image) }}"
+                class="edit-book-image"
+                alt="{{ book.title }}"
+            >
+
+            {% endif %}
+
+            <label>Change Book Image</label>
+
+            <div class="image-picker-buttons">
+
+                <label class="image-picker-button camera-button">
+                    📷 Take Photo
+                    <input
+                        type="file"
+                        name="image"
+                        accept="image/*"
+                        capture="environment"
+                        onchange="showSelectedImage(this)"
+                    >
+                </label>
+
+                <label class="image-picker-button gallery-button">
+                    🖼️ Choose from Gallery
+                    <input
+                        type="file"
+                        name="image_gallery"
+                        accept="image/*"
+                        onchange="showSelectedGallery(this)"
+                    >
+                </label>
+
+            </div>
+
+            <p id="selected-image" class="selected-image-text"></p>
+
+            <br>
+
+<label>Book Title</label>
+
+            <input
+                type="text"
+                name="title"
+                value="{{ book.title }}"
+                required
+            >
+
+            <label>Author</label>
+
+            <input
+                type="text"
+                name="author"
+                value="{{ book.author }}"
+                required
+            >
+
+            <label>Category</label>
+
+            <input
+                type="text"
+                name="category"
+                value="{{ book.category or '' }}"
+            >
+
+            <label>ISBN</label>
+
+            <input
+                type="text"
+                name="isbn"
+                value="{{ book.isbn or '' }}"
+            >
+
+            <label>Quantity</label>
+
+            <input
+                type="number"
+                name="quantity"
+                min="0"
+                value="{{ book.quantity }}"
+                required
+            >
+
+            <button type="submit">
+                💾 Save Changes
+            </button>
+
+        </form>
+
+    </div>
+
+    <br>
+
+    <a class="button" href="/admin/books">
+        ← Back to Books
+    </a>
+
+</div>
+{% endblock %}

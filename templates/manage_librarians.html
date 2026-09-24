@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+{% set title='Librarian Management' %}
+{% block content %}
+
+<div class="dashboard">
+
+    <h1>👨‍💼 Librarian Management</h1>
+
+    <p class="page-subtitle">
+        Manage librarians registered in the library
+    </p>
+
+    <a class="button" href="/admin/librarians/add">
+        ➕ Add New Librarian
+    </a>
+
+    {% if librarians %}
+
+    <div style="overflow-x:auto; margin-top:25px;">
+
+        <table>
+
+            <tr>
+                <th>Name</th>
+                <th>Username</th>
+                <th>Employee ID</th>
+                <th>Action</th>
+            </tr>
+
+            {% for librarian in librarians %}
+
+            <tr>
+
+                <td>
+                    <a href="/admin/librarians/{{ librarian.librarian_id }}"><strong>{{ librarian.full_name }}</strong></a>
+                </td>
+
+                <td>
+                    {{ librarian.username }}
+                </td>
+
+                <td>
+                    {{ librarian.employee_id }}
+                </td>
+
+                <td>
+
+                    <form method="POST"
+                          action="/admin/librarians/delete/{{ librarian.librarian_id }}"
+                          onsubmit="return confirm('Are you sure you want to delete this librarian?');">
+
+                        <button type="submit"
+                                style="background:#dc3545;">
+                            🗑️ Delete
+                        </button>
+
+                    </form>
+
+                </td>
+
+            </tr>
+
+            {% endfor %}
+
+        </table>
+
+    </div>
+
+    {% else %}
+
+    <div class="card" style="margin-top:25px;">
+
+        <h3>👨‍💼 No Librarians Found</h3>
+
+        <p>
+            There are currently no librarians registered.
+        </p>
+
+        <br>
+
+        <a class="button" href="/admin/librarians/add">
+            ➕ Add First Librarian
+        </a>
+
+    </div>
+
+    {% endif %}
+
+    <br><br>
+
+    <a href="/admin">
+        ← Back to Admin Dashboard
+    </a>
+
+</div>
+{% endblock %}

@@ -1,0 +1,11 @@
+{% extends "base.html" %}{% set title='Import Students' %}{% set page_title='Bulk Student Import' %}
+{% block content %}<div class="modern-page"><div class="form-panel">
+<h2>📥 Bulk Import Students</h2><p>Upload a CSV to create hundreds of student accounts at once. Each student receives a random temporary password and must change it after first login.</p>
+{% if error %}<div class="error">{{error}}</div>{% endif %}
+<form method="POST" enctype="multipart/form-data"><label>Student CSV</label><input type="file" name="csv_file" accept=".csv" required><button type="submit">Import Students</button></form>
+<div class="panel" style="margin-top:18px"><h3>CSV columns</h3><code>full_name,username,roll_no,course,semester,academic_year,department,email,phone</code><p class="muted">Only full_name, username, roll_no and course are required.</p></div>
+{% if imported_count %}<div class="success">Imported {{ imported_count }} student accounts. Download the generated credentials below and store them securely.</div><textarea id="credentialCsv" readonly style="width:100%;min-height:180px">{{ result_file }}</textarea><button type="button" onclick="downloadCredentials()">⬇️ Download Credentials CSV</button>{% endif %}
+<a class="button" href="{{url_for('manage_students')}}" style="margin-top:16px">← Back to Students</a>
+</div></div>
+<script>function downloadCredentials(){const text=document.getElementById('credentialCsv').value;const blob=new Blob([text],{type:'text/csv'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='student_credentials_v9.csv';a.click();URL.revokeObjectURL(a.href);}</script>
+{% endblock %}

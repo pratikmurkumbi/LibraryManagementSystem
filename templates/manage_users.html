@@ -1,0 +1,95 @@
+{% extends "base.html" %}
+{% set title='User Management' %}
+{% block content %}
+
+<div class="dashboard">
+
+    <h1>👥 User Management</h1>
+
+    <p class="page-subtitle">
+        View all registered users and their roles
+    </p>
+
+    {% if users %}
+
+    <div class="table-container">
+
+        <table>
+
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Username</th>
+                    <th>Role</th>
+                </tr>
+            </thead>
+
+            <tbody>
+
+            {% for user in users %}
+
+                <tr>
+
+                    <td>
+                        {{ user.id }}
+                    </td>
+
+                    <td>
+                        <strong>{{ user.full_name }}</strong>
+                    </td>
+
+                    <td>
+                        {{ user.username }}
+                    </td>
+
+                    <td>
+
+                        {% if user.role == "admin" %}
+
+                            👨‍💻 Admin
+
+                        {% elif user.role == "librarian" %}
+
+                            👨‍💼 Librarian
+
+                        {% else %}
+
+                            👨‍🎓 Student
+
+                        {% endif %}
+
+                    </td>
+
+                </tr>
+
+            {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+    {% else %}
+
+    <div class="card" style="margin-top:25px;">
+
+        <h3>👥 No Users Found</h3>
+
+        <p>
+            There are currently no registered users.
+        </p>
+
+    </div>
+
+    {% endif %}
+
+    <br>
+
+    <a class="button" href="/admin">
+        ← Back to Admin Dashboard
+    </a>
+
+</div>
+{% endblock %}

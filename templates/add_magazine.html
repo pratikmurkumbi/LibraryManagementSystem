@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+{% set title='Add College Magazine' %}
+{% block content %}
+<div class="legacy-page unified-page">
+<div class="dashboard">
+
+    <h1>📰 Add College Magazine</h1>
+
+    <p class="page-subtitle">
+        Upload a college magazine to the digital library
+    </p>
+
+    {% if error %}
+        <div class="error">{{ error }}</div>
+    {% endif %}
+
+    <form method="POST"
+          enctype="multipart/form-data"
+          class="profile-card">
+
+        <label>Magazine Title</label>
+        <input type="text"
+               name="title"
+               placeholder="Example: Campus Chronicle 2026"
+               required>
+
+        <label>Description</label>
+        <textarea name="description"
+                  placeholder="Enter magazine description"
+                  rows="4"></textarea>
+
+        <label>Academic Year</label>
+        <input type="text"
+               name="academic_year"
+               placeholder="Example: 2026-27">
+
+        <label>Semester</label>
+        <select name="semester">
+            <option value="">Select Semester</option>
+            <option value="1">Semester 1</option>
+            <option value="2">Semester 2</option>
+            <option value="3">Semester 3</option>
+            <option value="4">Semester 4</option>
+            <option value="5">Semester 5</option>
+            <option value="6">Semester 6</option>
+        </select>
+
+        <label>Department</label>
+        <input type="text"
+               name="department"
+               placeholder="Example: Computer Science and Engineering">
+
+        <label>Publication Date</label>
+        <input type="date"
+               name="publication_date">
+
+        <label>Magazine Cover Image</label>
+        <input type="file"
+               name="cover_image"
+               accept=".jpg,.jpeg,.png,.webp">
+
+        <label>Magazine PDF</label>
+        <input type="file"
+               name="pdf_file"
+               accept=".pdf"
+               required>
+
+        <br>
+
+        <button type="submit" class="login-button">
+            📤 Upload Magazine
+        </button>
+
+    </form>
+
+    <br>
+
+    <a href="{{ url_for('manage_magazines') }}">
+        ← Back to Magazine Management
+    </a>
+
+</div>
+</div>
+{% endblock %}

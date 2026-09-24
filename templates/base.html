@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{{ title or "Library Management System" }}</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}?v=7.0.0">
+<meta name="theme-color" content="#6d20e8">
+</head>
+<body class="modern-app">
+<div id="page-loader" aria-hidden="true">
+  <div class="loader-content">
+    <div class="loader-logo">📚</div>
+    <div class="loader-title">Library Management System</div>
+    <div class="loader-text">Loading...</div>
+    <div class="loader-spinner"></div>
+  </div>
+</div>
+
+<div class="app-shell">
+  <aside class="sidebar" id="sidebar">
+    <div class="brand">
+      <div class="brand-mark"><img src="{{ url_for('static', filename='images/college-logo-placeholder.svg') }}" alt="College logo"></div>
+      <div><strong>Library Pro</strong><small>Government Polytechnic Haliyal</small></div>
+    </div>
+
+    <nav class="side-nav">
+      {% if session.get('role') == 'admin' %}
+      <a href="/admin" class="nav-item">🏠 <span>Dashboard</span></a>
+      <a href="/admin/books" class="nav-item">📚 <span>Books</span></a>
+      <a href="/admin/ebooks" class="nav-item">📱 <span>E-Books</span></a>
+      <a href="/admin/journals" class="nav-item">📰 <span>Journals</span></a>
+      <a href="/admin/magazines" class="nav-item">🗞️ <span>Magazines</span></a>
+      <a href="/admin/students" class="nav-item">👨‍🎓 <span>Students</span></a>
+      <a href="/admin/librarians" class="nav-item">👨‍🏫 <span>Librarians</span></a>
+      <a href="/admin/notices" class="nav-item">📢 <span>Notices</span></a>
+      <a href="/admin/events" class="nav-item">🎉 <span>Events</span></a>
+      <a href="/admin/reservations" class="nav-item">🔖 <span>Reservations</span></a>
+      <a href="/admin/fines" class="nav-item">💰 <span>Fines</span></a>
+      <a href="/admin/users" class="nav-item">👥 <span>Users</span></a>
+      <a href="/admin/reports" class="nav-item">📊 <span>Reports</span></a>
+      <a href="/admin/analytics" class="nav-item">📈 <span>Analytics</span></a>
+      <a href="/admin/late-notifications" class="nav-item">⏰ <span>Late Alerts</span></a>
+      <a href="/admin/manage-admins" class="nav-item">🛡️ <span>Admins</span></a>
+      {% elif session.get('role') == 'librarian' %}
+      <a href="/librarian" class="nav-item">🏠 <span>Dashboard</span></a>
+      <a href="/admin/books" class="nav-item">📚 <span>Books</span></a>
+      <a href="/admin/ebooks" class="nav-item">📱 <span>E-Books</span></a>
+      <a href="/admin/journals" class="nav-item">📰 <span>Journals</span></a>
+      <a href="/admin/magazines" class="nav-item">🗞️ <span>Magazines</span></a>
+      <a href="/librarian/students" class="nav-item">👨‍🎓 <span>Students</span></a>
+      <a href="/librarian/issue" class="nav-item">📤 <span>Issue Book</span></a>
+      <a href="/librarian/issues" class="nav-item">↩️ <span>Returns / Issues</span></a>
+      <a href="/librarian/reservations" class="nav-item">🔖 <span>Reservations</span></a>
+      <a href="/librarian/events" class="nav-item">🎉 <span>Events</span></a>
+      <a href="/librarian/fines" class="nav-item">💰 <span>Fines</span></a>
+      <a href="/librarian/late-notifications" class="nav-item">⏰ <span>Late Alerts</span></a>
+      <a href="/admin/book-search" class="nav-item">🔎 <span>Search Books</span></a>
+      {% elif session.get('role') == 'student' %}
+      <a href="/student" class="nav-item">🏠 <span>Dashboard</span></a>
+      <a href="/student/books" class="nav-item">📚 <span>Books</span></a>
+      <a href="/student/digital-library" class="nav-item">📱 <span>Digital Library</span></a>
+      <a href="/magazines" class="nav-item">🗞️ <span>Magazines</span></a>
+      <a href="/student/reservations" class="nav-item">🔖 <span>Reservations</span></a>
+      <a href="/student/my-books" class="nav-item">📚 <span>My Books</span></a>
+      <a href="/student/notifications" class="nav-item">🔔 <span>Notifications</span></a>
+      <a href="/student/bookmarks" class="nav-item">🔖 <span>Bookmarks</span></a>
+      <a href="/student/events" class="nav-item">🎉 <span>Events</span></a>
+      <a href="/student/notices" class="nav-item">📢 <span>Notices</span></a>
+      <a href="/student/history" class="nav-item">📋 <span>My History</span></a>
+      <a href="/student/card" class="nav-item">🪪 <span>Library Card</span></a>
+      <a href="/student/profile" class="nav-item">👤 <span>Profile</span></a>
+      {% endif %}
+    </nav>
+
+    {% if session.get('user_id') %}
+    <div class="sidebar-bottom">
+      {% if session.get('role') == 'admin' %}<a href="/admin/profile" class="nav-item">👤 <span>Profile</span></a>{% elif session.get('role') == 'librarian' %}<a href="/librarian/profile" class="nav-item">👤 <span>Profile</span></a>{% endif %}
+      <a href="/change-password" class="nav-item">🔐 <span>Change Password</span></a>
+      <a href="/logout" class="nav-item danger">🚪 <span>Logout</span></a>
+    </div>
+    {% endif %}
+  </aside>
+
+  <main class="main-content">
+    <header class="topbar">
+      <button class="menu-toggle" aria-label="Open menu" onclick="document.getElementById('sidebar').classList.toggle('open')">☰</button>
+      <div>
+        <div class="eyebrow">GOVERNMENT POLYTECHNIC HALIYAL</div>
+        <h1>{{ page_title or title or "Library Management System" }}</h1>
+      </div>
+      {% if session.get('user_id') %}
+      <div class="user-chip">👤 {{ session.get('full_name','User') }} <small>· {{ session.get('role','')|title }}</small></div>
+      {% endif %}
+    </header>
+
+    <section class="page-content">
+      {% block content %}{% endblock %}
+    </section>
+  </main>
+</div>
+
+<script>
+(function () {
+  const loader = document.getElementById("page-loader");
+  if (!loader) return;
+  let hidden = false;
+  function hideLoader() {
+    if (hidden) return;
+    hidden = true;
+    loader.classList.remove("show");
+    loader.classList.add("hide");
+    setTimeout(() => {
+      loader.style.display = "none";
+      loader.setAttribute("aria-hidden", "true");
+    }, 260);
+  }
+  // The loader starts hidden. This prevents a broken script, blocked asset, or
+  // cached page from ever covering the application permanently.
+  loader.classList.add("show");
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", () => setTimeout(hideLoader, 180), { once: true });
+  } else {
+    setTimeout(hideLoader, 180);
+  }
+  setTimeout(hideLoader, 1200);
+})();
+
+document.addEventListener("click", function(e) {
+  const s = document.getElementById("sidebar");
+  if (s && s.classList.contains("open") && !s.contains(e.target) && !e.target.closest(".menu-toggle")) {
+    s.classList.remove("open");
+  }
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,20 @@
+{% extends "base.html" %}{% set title="Student Dashboard" %}{% set page_title="Student Library" %}
+{% block content %}<div class="modern-page">
+<div class="hero"><h2>Hello, {{ name }} 👋</h2><p>Search books and explore the college digital library from your phone or computer.</p><form class="search-box" action="/student/books" method="get"><input name="search" placeholder="Search books by title, author, category or ISBN"><button>Search 🔎</button></form></div>
+<div class="stat-grid">
+<div class="stat-card"><div class="stat-icon">📚</div><div><small>Library Books</small><strong>{{ total_books }}</strong></div></div>
+<div class="stat-card"><div class="stat-icon">📤</div><div><small>My Issued Books</small><strong>{{ issued_books }}</strong></div></div>
+<div class="stat-card"><div class="stat-icon">📱</div><div><small>E-Books</small><strong>{{ total_ebooks }}</strong></div></div>
+<div class="stat-card"><div class="stat-icon">📰</div><div><small>Journals</small><strong>{{ total_journals }}</strong></div></div>
+</div>
+<div class="section-head"><div><h2>Digital Library</h2><p>Reading resources and college information.</p></div></div>
+<div class="action-grid">
+<a class="resource-card action-card" href="/student/books"><div class="icon">📚</div><h3>Search Books</h3><p>Find available physical books.</p></a>
+<a class="resource-card action-card" href="/digital-library"><div class="icon">📱</div><h3>E-Books & Journals</h3><p>Open digital learning resources.</p></a>
+<a class="resource-card action-card" href="/magazines"><div class="icon">🗞️</div><h3>Magazines</h3><p>Browse college magazines.</p></a>
+<a class="resource-card action-card" href="/student/history"><div class="icon">📋</div><h3>My History</h3><p>View library activity.</p></a>
+<a class="resource-card action-card" href="/student/card"><div class="icon">🪪</div><h3>Library Card</h3><p>View your digital library card.</p></a>
+<a class="resource-card action-card" href="/student/events"><div class="icon">🎉</div><h3>College Events</h3><p>Events, photos and videos.</p></a>
+<a class="resource-card action-card" href="/student/notices"><div class="icon">📢</div><h3>Notice Board</h3><p>College notices and announcements.</p></a>
+<a class="resource-card action-card" href="/logout"><div class="icon">🚪</div><h3>Logout</h3><p>Sign out securely.</p></a>
+</div></div>{% endblock %}

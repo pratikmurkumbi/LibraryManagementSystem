@@ -1,0 +1,128 @@
+{% extends "base.html" %}
+{% set title='My Reservations' %}
+{% block content %}
+
+
+<div class="dashboard">
+
+    <h1>🔖 My Reservations</h1>
+
+    <p class="page-subtitle">
+        Track your reserved books
+    </p>
+
+    {% if reservations %}
+
+    <div style="overflow-x:auto;">
+
+        <table>
+
+            <tr>
+                <th>Book</th>
+                <th>Author</th>
+                <th>Reserved Date</th>
+                <th>Status</th>
+                <th>Action</th>
+            </tr>
+
+            {% for reservation in reservations %}
+
+            <tr>
+
+                <td>
+                    <strong>{{ reservation.title }}</strong>
+                </td>
+
+                <td>
+                    {{ reservation.author }}
+                </td>
+
+                <td>
+                    {{ reservation.reservation_date }}
+                </td>
+
+                <td>
+
+                    {% if reservation.status == "Pending" %}
+
+                        ⏳ <strong>Pending</strong>
+
+                    {% elif reservation.status == "Approved" %}
+
+                        ✅ <strong>Approved</strong>
+
+                    {% elif reservation.status == "Completed" %}
+
+                        📖 <strong>Book Issued</strong>
+
+                    {% elif reservation.status == "Rejected" %}
+
+                        ❌ <strong>Rejected</strong>
+
+                    {% elif reservation.status == "Cancelled" %}
+
+                        🚫 <strong>Cancelled</strong>
+
+                    {% else %}
+
+                        {{ reservation.status }}
+
+                    {% endif %}
+
+                </td>
+
+                <td>
+
+                    {% if reservation.status in ["Pending", "Approved"] %}
+
+                    <form method="POST"
+                          action="/student/reservations/cancel/{{ reservation.id }}">
+
+                        <button type="submit">
+                            Cancel
+                        </button>
+
+                    </form>
+
+                    {% elif reservation.status == "Completed" %}
+
+                        📚 Issued
+
+                    {% else %}
+
+                        -
+
+                    {% endif %}
+
+                </td>
+
+            </tr>
+
+            {% endfor %}
+
+        </table>
+
+    </div>
+
+    {% else %}
+
+    <div class="card">
+
+        <h3>🔖 No Reservations</h3>
+
+        <p>
+            You have no book reservations.
+        </p>
+
+    </div>
+
+    {% endif %}
+
+    <br>
+
+    <a class="button" href="/student">
+        ← Back to Dashboard
+    </a>
+
+</div>
+{% endblock %}

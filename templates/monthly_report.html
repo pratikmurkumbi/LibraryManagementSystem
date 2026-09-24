@@ -1,0 +1,245 @@
+{% extends "base.html" %}
+{% set title='Monthly Library Report' %}
+{% block content %}
+<div class="legacy-page unified-page">
+<div class="report-page">
+
+    <div class="report-header">
+
+        <h1>📅 Monthly Library Report</h1>
+
+        <p>
+            Government Polytechnic Haliyal Library Management System
+        </p>
+
+    </div>
+
+
+    <div class="month-box">
+
+        <form method="GET">
+
+            <label>
+                Select Month
+            </label>
+
+            <input
+                type="month"
+                name="month"
+                value="{{ selected_month }}"
+                required
+            >
+
+            <button class="generate-button" type="submit">
+                📊 Generate Monthly Report
+            </button>
+
+        </form>
+
+    </div>
+
+
+    {% if selected_month %}
+
+    <div class="summary-grid">
+
+        <div class="summary-card">
+
+            <div class="summary-number">
+                {{ report|length }}
+            </div>
+
+            <div>
+                Total Book Transactions
+            </div>
+
+        </div>
+
+
+        <div class="summary-card">
+
+            <div class="summary-number">
+
+                {{ report|selectattr("status", "equalto", "Issued")|list|length }}
+
+            </div>
+
+            <div>
+                Currently Issued
+            </div>
+
+        </div>
+
+
+        <div class="summary-card">
+
+            <div class="summary-number">
+
+                {{ report|selectattr("status", "equalto", "Returned")|list|length }}
+
+            </div>
+
+            <div>
+                Returned Books
+            </div>
+
+        </div>
+
+    </div>
+
+
+    {% if report %}
+
+    <div class="table-container">
+
+        <table id="monthlyTable">
+
+            <thead>
+
+                <tr>
+                    <th>Student Name</th>
+                    <th>Roll No</th>
+                    <th>Course</th>
+                    <th>Semester</th>
+                    <th>Book</th>
+                    <th>Author</th>
+                    <th>Issue Date</th>
+                    <th>Due Date</th>
+                    <th>Return Date</th>
+                    <th>Status</th>
+                    <th>Fine</th>
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+            {% for row in report %}
+
+                <tr>
+
+                    <td>{{ row.student_name }}</td>
+                    <td>{{ row.roll_no }}</td>
+                    <td>{{ row.course }}</td>
+                    <td>{{ row.semester }}</td>
+                    <td>{{ row.book_title }}</td>
+                    <td>{{ row.author }}</td>
+                    <td>{{ row.issue_date }}</td>
+                    <td>{{ row.due_date or "-" }}</td>
+                    <td>{{ row.return_date or "-" }}</td>
+                    <td>{{ row.status }}</td>
+                    <td>₹{{ row.fine or 0 }}</td>
+
+                </tr>
+
+            {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+    <div class="actions">
+
+        <button class="action-button"
+                onclick="window.print()">
+            🖨️ Print
+        </button>
+
+        <button class="action-button"
+                onclick="downloadCSV()">
+            ⬇️ Download CSV
+        </button>
+
+    </div>
+
+    {% else %}
+
+    <div class="summary-card">
+
+        <h3>📚 No Records Found</h3>
+
+        <p>
+            No books were issued during
+            <strong>{{ selected_month }}</strong>.
+        </p>
+
+    </div>
+
+    {% endif %}
+
+    {% endif %}
+
+
+    <br>
+
+    <a class="back-link"
+       href="/admin/reports">
+        ← Back to Reports
+    </a>
+
+</div>
+
+
+<script>
+
+function downloadCSV() {
+
+    const table = document.getElementById("monthlyTable");
+
+    if (!table) {
+        alert("There is no report to download.");
+        return;
+    }
+
+    let csv = [];
+
+    table.querySelectorAll("tr").forEach(row => {
+
+        let columns = [];
+
+        row.querySelectorAll("th, td").forEach(cell => {
+
+            let value = cell.innerText
+                .replace(/"/g, '""')
+                .replace(/\n/g, ' ')
+                .trim();
+
+            columns.push('"' + value + '"');
+
+        });
+
+        csv.push(columns.join(","));
+
+    });
+
+    const blob = new Blob(
+        [csv.join("\n")],
+        { type: "text/csv;charset=utf-8;" }
+    );
+
+    const url = URL.createObjectURL(blob);
+
+    const link = document.createElement("a");
+
+    link.href = url;
+    link.download = "monthly_library_report.csv";
+
+    link.click();
+
+    URL.revokeObjectURL(url);
+
+}
+
+</script>
+
+
+<div class="report-download-box">
+    <a class="report-download-button"
+       href="/admin/reports/monthly/pdf?month={{ selected_month }}">
+        ⬇️ Download Monthly Report PDF
+    </a>
+</div>
+</div>
+{% endblock %}

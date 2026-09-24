@@ -1,0 +1,108 @@
+{% extends "base.html" %}
+{% set title='Search Books' %}
+{% block content %}
+
+
+<div class="dashboard">
+
+    <h1>🔎 Search Library</h1>
+
+    <p class="page-subtitle">
+        Find books available in the library
+    </p>
+
+    <form method="GET" class="search-box">
+
+        <input
+            type="text"
+            name="search"
+            value="{{ search }}"
+            placeholder="Search by title, author, category or ISBN"
+        >
+
+        <button type="submit">
+            Search
+        </button>
+
+    </form>
+
+    <div class="book-grid">
+
+        {% for book in books %}
+
+        <div class="book-card">
+
+            {% if book.image %}
+                <img
+                    src="{{ url_for('static', filename='uploads/books/' + book.image) }}"
+                    alt="{{ book.title }}"
+                    class="book-image"
+                >
+            {% else %}
+                <div class="book-icon">
+                    📖
+                </div>
+            {% endif %}
+
+            <h3>{{ book.title }}</h3>
+
+            <p>
+                <strong>Author:</strong>
+                {{ book.author }}
+            </p>
+
+            <p>
+                <strong>Category:</strong>
+                {{ book.category or "Not specified" }}
+            </p>
+
+            <p>
+                <strong>ISBN:</strong>
+                {{ book.isbn or "Not specified" }}
+            </p>
+
+            {% if book.quantity > 0 %}
+
+                <div class="available">
+                    Available: {{ book.quantity }}
+                </div>
+
+            {% else %}
+
+                <div class="unavailable">
+                    Currently unavailable
+                </div>
+
+            
+                <form method="POST" action="/student/reserve/{{ book.id }}" style="margin-top: 15px;">
+                    <button type="submit">🔖 Reserve Book</button>
+                </form>
+
+{% endif %}
+
+        </div>
+
+        {% else %}
+
+        <div class="card">
+
+            <h3>📚 No Books Found</h3>
+
+            <p>
+                Try searching with another title or author.
+            </p>
+
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+    <br>
+
+    <a href="/student">
+        ← Back to Dashboard
+    </a>
+
+</div>
+{% endblock %}

@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% set title='College Notices' %}
+{% block content %}
+<div class="legacy-page unified-page">
+<div class="dashboard">
+
+    <h1>📢 College Notice Board</h1>
+
+    <p class="page-subtitle">
+        Latest college and library announcements
+    </p>
+
+    {% if notices %}
+
+        {% for notice in notices %}
+
+        <div class="notice-card">
+
+            <span class="notice-type">
+                {{ notice.notice_type }}
+            </span>
+
+            <h2>{{ notice.title }}</h2>
+
+            <p>
+                {{ notice.description }}
+            </p>
+
+            <div class="notice-date">
+                📅 {{ notice.created_at }}
+                {% if notice.created_by_name %}
+                    · Published by {{ notice.created_by_name }}
+                {% endif %}
+            </div>
+
+        </div>
+
+        {% endfor %}
+
+    {% else %}
+
+        <div class="notice-card">
+            <h2>📭 No Notices</h2>
+            <p>There are no notices at the moment.</p>
+        </div>
+
+    {% endif %}
+
+    <br>
+
+    <a href="/student">
+        ← Back to Student Dashboard
+    </a>
+
+</div>
+</div>
+{% endblock %}

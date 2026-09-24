@@ -1,0 +1,103 @@
+{% extends "base.html" %}
+{% set title='Issued Books' %}
+{% block content %}
+
+
+<div class="dashboard">
+
+    <h1>📋 Issued Books</h1>
+
+    {% if issues %}
+
+    <table>
+
+        <tr>
+            <th>Book</th>
+            <th>Student</th>
+            <th>Roll No</th>
+            <th>Issue Date</th>
+            <th>Due Date</th>
+            <th>Return Date</th>
+            <th>Status</th>
+            <th>Fine</th>
+            <th>Action</th>
+        </tr>
+
+        {% for issue in issues %}
+
+        <tr>
+
+            <td>{{ issue.title }}</td>
+
+            <td>{{ issue.full_name }}</td>
+
+            <td>{{ issue.roll_no }}</td>
+
+            <td>{{ issue.issue_date }}</td>
+
+            <td>{{ issue.due_date or "-" }}</td>
+
+            <td>
+                {{ issue.return_date or "-" }}
+            </td>
+
+            <td>
+                {% if issue.status == "Issued" %}
+                    📖 Issued
+                {% else %}
+                    ✅ Returned
+                {% endif %}
+            </td>
+
+            <td>
+                ₹{{ issue.fine or 0 }}
+            </td>
+
+            <td>
+
+                {% if issue.status == "Issued" %}
+
+                <form method="POST"
+                      action="/librarian/return/{{ issue.id }}"
+                      onsubmit="return confirm('Return this book? The return date and fine will be recorded.');">
+
+                    <button type="submit" class="return-button">
+                        🔄 Return Book
+                    </button>
+
+                </form>
+
+                {% else %}
+
+                    Completed
+
+                {% endif %}
+
+            </td>
+
+        </tr>
+
+        {% endfor %}
+
+    </table>
+
+    {% else %}
+
+    <div class="card">
+
+        <h3>📚 No Books Issued</h3>
+
+        <p>There are currently no issued books.</p>
+
+    </div>
+
+    {% endif %}
+
+    <br>
+
+    <a href="/librarian">
+        ← Back to Dashboard
+    </a>
+
+</div>
+{% endblock %}

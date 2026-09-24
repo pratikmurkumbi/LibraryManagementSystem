@@ -1,0 +1,205 @@
+{% extends "base.html" %}
+{% set title='Library Reports' %}
+{% block content %}
+<div class="legacy-page unified-page">
+<div class="dashboard">
+
+    <div class="report-header">
+
+        <h1>📊 Library Usage Report</h1>
+
+        <p>
+            Government Polytechnic Haliyal Library Management System
+        </p>
+
+    </div>
+
+
+    <div class="report-tools">
+
+        <button class="report-tool"
+                onclick="window.print()">
+            🖨️ Print Report
+        </button>
+
+        <button class="report-tool"
+                onclick="downloadCSV()">
+            ⬇️ Download CSV
+        </button>
+
+    </div>
+
+
+    {% if report %}
+
+    <div class="report-table-container">
+
+        <table class="report-table" id="reportTable">
+
+            <thead>
+
+                <tr>
+
+                    <th>Student Name</th>
+                    <th>Roll Number</th>
+                    <th>Course</th>
+                    <th>Semester</th>
+                    <th>Academic Year</th>
+                    <th>Book</th>
+                    <th>Author</th>
+                    <th>Issue Date</th>
+                    <th>Due Date</th>
+                    <th>Return Date</th>
+                    <th>Status</th>
+                    <th>Fine</th>
+
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+            {% for row in report %}
+
+                <tr>
+
+                    <td>{{ row.student_name }}</td>
+
+                    <td>{{ row.roll_no }}</td>
+
+                    <td>{{ row.course }}</td>
+
+                    <td>Semester {{ row.semester }}</td>
+
+                    <td>{{ row.academic_year }}</td>
+
+                    <td>{{ row.book_title }}</td>
+
+                    <td>{{ row.author }}</td>
+
+                    <td>{{ row.issue_date }}</td>
+
+                    <td>{{ row.due_date or "-" }}</td>
+
+                    <td>{{ row.return_date or "-" }}</td>
+
+                    <td>
+
+                        {% if row.status == "Issued" %}
+                            <span class="status-issued">
+                                📖 Issued
+                            </span>
+
+                        {% elif row.status == "Returned" %}
+                            <span class="status-returned">
+                                ✅ Returned
+                            </span>
+
+                        {% else %}
+                            <span class="status-overdue">
+                                ⚠️ {{ row.status }}
+                            </span>
+                        {% endif %}
+
+                    </td>
+
+                    <td>
+                        ₹{{ row.fine or 0 }}
+                    </td>
+
+                </tr>
+
+            {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+    {% else %}
+
+    <div class="card empty-report">
+
+        <h2>📚 No Library Records</h2>
+
+        <p>
+            No book issue records are available yet.
+        </p>
+
+    </div>
+
+    {% endif %}
+
+
+    <br>
+
+    <a class="back-link"
+       href="/admin/reports">
+        ← Back to Reports
+    </a>
+
+</div>
+
+
+<script>
+
+function downloadCSV() {
+
+    const table = document.getElementById("reportTable");
+
+    if (!table) {
+        alert("No report data available.");
+        return;
+    }
+
+    let csv = [];
+
+    const rows = table.querySelectorAll("tr");
+
+    rows.forEach(function(row) {
+
+        const cols = row.querySelectorAll("th, td");
+
+        let data = [];
+
+        cols.forEach(function(col) {
+
+            let text = col.innerText
+                .replace(/"/g, '""')
+                .replace(/\n/g, ' ')
+                .trim();
+
+            data.push('"' + text + '"');
+
+        });
+
+        csv.push(data.join(","));
+
+    });
+
+    const blob = new Blob(
+        [csv.join("\n")],
+        { type: "text/csv;charset=utf-8;" }
+    );
+
+    const url = URL.createObjectURL(blob);
+
+    const link = document.createElement("a");
+
+    link.href = url;
+    link.download = "library_usage_report.csv";
+
+    document.body.appendChild(link);
+
+    link.click();
+
+    document.body.removeChild(link);
+
+    URL.revokeObjectURL(url);
+
+}
+
+</script>
+</div>
+{% endblock %}

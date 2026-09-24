@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% set title='College Events' %}
+{% block content %}
+<div class="legacy-page unified-page">
+<div class="events-page">
+    <div class="events-hero">
+        <h1>🎉 College Events</h1>
+        <p>Stay updated with college programs, celebrations and activities.</p>
+    </div>
+
+    {% if events %}
+    <div class="event-grid">
+        {% for event in events %}
+        <article class="event-card">
+            {% if event.image_filename %}
+                <img class="event-media"
+                     src="{{ url_for('static', filename='uploads/events/' + event.image_filename) }}"
+                     alt="{{ event.title }}">
+            {% else %}
+                <div class="event-placeholder">🎉</div>
+            {% endif %}
+
+            <div class="event-body">
+                <h2>{{ event.title }}</h2>
+
+                <div class="event-meta">
+                    <span class="event-chip">📅 {{ event.event_date }}</span>
+                    {% if event.event_time %}<span class="event-chip">⏰ {{ event.event_time }}</span>{% endif %}
+                    {% if event.venue %}<span class="event-chip">📍 {{ event.venue }}</span>{% endif %}
+                </div>
+
+                {% if event.description %}
+                <div class="event-desc">{{ event.description }}</div>
+                {% endif %}
+
+                {% if event.video_filename %}
+                <video class="event-video" controls preload="metadata">
+                    <source src="{{ url_for('static', filename='uploads/events/' + event.video_filename) }}">
+                    Your browser does not support video playback.
+                </video>
+                {% endif %}
+            </div>
+        </article>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="empty-events">
+        <div style="font-size:50px">📅</div>
+        <h2>No events yet</h2>
+        <p>College events will appear here when they are added by the administrator.</p>
+    </div>
+    {% endif %}
+
+    <a class="button back" href="/student">← Back to Dashboard</a>
+</div>
+</div>
+{% endblock %}

@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% set title='Book Usage Report' %}
+{% block content %}
+<div class="legacy-page unified-page">
+<div class="page">
+
+<div class="header">
+<h1>📚 Book Usage Report</h1>
+<p>Most frequently issued books</p>
+</div>
+
+<div class="table-box">
+
+<table>
+
+<tr>
+<th>Rank</th>
+<th>Book</th>
+<th>Author</th>
+<th>Category</th>
+<th>Times Issued</th>
+</tr>
+
+{% for row in report %}
+
+<tr>
+<td class="rank">{{ loop.index }}</td>
+<td>{{ row.title }}</td>
+<td>{{ row.author }}</td>
+<td>{{ row.category or "-" }}</td>
+<td>{{ row.times_issued }}</td>
+</tr>
+
+{% endfor %}
+
+</table>
+
+</div>
+
+<br>
+
+<a href="/admin/reports">
+← Back to Reports
+</a>
+
+</div>
+
+
+<div class="report-download-box">
+    <a class="report-download-button"
+       href="/admin/reports/books/pdf">
+        ⬇️ Download Book Usage PDF
+    </a>
+</div>
+</div>
+{% endblock %}

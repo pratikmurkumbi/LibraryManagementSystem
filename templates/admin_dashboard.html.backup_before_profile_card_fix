@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Admin Dashboard</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+
+    <style>
+
+        .quick-title {
+            text-align: center;
+            margin: 30px 0 18px;
+        }
+
+        .quick-title h2 {
+            margin-bottom: 6px;
+        }
+
+        .quick-title p {
+            color: #777;
+            margin: 0;
+        }
+
+        .quick-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 18px;
+            margin-top: 20px;
+        }
+
+        .quick-card {
+            position: relative;
+            min-height: 145px;
+            padding: 22px;
+            border-radius: 22px;
+            background: white;
+            text-decoration: none;
+            color: #222;
+            box-shadow: 0 7px 25px rgba(0,0,0,0.09);
+            border: 1px solid rgba(0,0,0,0.05);
+            overflow: hidden;
+            transition:
+                transform 0.2s ease,
+                box-shadow 0.2s ease;
+            box-sizing: border-box;
+        }
+
+        .quick-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 30px rgba(0,0,0,0.14);
+        }
+
+        .quick-card:active {
+            transform: scale(0.97);
+        }
+
+        .quick-icon {
+            width: 55px;
+            height: 55px;
+            border-radius: 17px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            margin-bottom: 14px;
+            background: #eef5ff;
+        }
+
+        .quick-card h3 {
+            margin: 0;
+            font-size: 19px;
+        }
+
+        .quick-card p {
+            margin: 7px 0 0;
+            color: #777;
+            font-size: 13px;
+            line-height: 1.4;
+        }
+
+        .quick-arrow {
+            position: absolute;
+            right: 18px;
+            bottom: 18px;
+            font-size: 20px;
+            opacity: 0.5;
+        }
+
+        .profile-card .quick-icon {
+            background: #eaf4ff;
+        }
+
+        .reservation-card .quick-icon {
+            background: #fff4df;
+        }
+
+        .reports-card .quick-icon {
+            background: #eaf9ef;
+        }
+
+        .magazine-card .quick-icon {
+            background: #f5ecff;
+        }
+
+        @media (max-width: 600px) {
+
+            .quick-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 12px;
+            }
+
+            .quick-card {
+                min-height: 150px;
+                padding: 16px;
+                border-radius: 18px;
+            }
+
+            .quick-icon {
+                width: 48px;
+                height: 48px;
+                font-size: 24px;
+                border-radius: 14px;
+            }
+
+            .quick-card h3 {
+                font-size: 16px;
+            }
+
+            .quick-card p {
+                font-size: 12px;
+            }
+
+            .quick-arrow {
+                right: 13px;
+                bottom: 13px;
+            }
+
+        }
+
+    
+        .issued-books-card {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .issued-icon {
+            background: #fff3e8 !important;
+        }
+
+        .stat-badge {
+            padding: 5px 9px;
+            border-radius: 20px;
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            background: #eaf8ef;
+            color: #218838;
+        }
+
+        .stat-description {
+            margin-top: 5px;
+            font-size: 11px;
+            color: #888;
+        }
+
+        .issued-books-card::after {
+            content: "📚";
+            position: absolute;
+            right: -8px;
+            bottom: -18px;
+            font-size: 75px;
+            opacity: 0.055;
+            pointer-events: none;
+        }
+
+        @media (max-width: 600px) {
+            .stat-description {
+                font-size: 10px;
+            }
+
+            .stat-badge {
+                font-size: 9px;
+                padding: 4px 7px;
+            }
+        }
+
+    
+/* Add Librarian card */
+.librarian-card .quick-icon {
+    background: #e8f5e9;
+}
+
+.librarian-card:hover {
+    transform: translateY(-5px);
+}
+
+</style>
+
+
+<style>
+
+/* =========================================
+   ADMIN DASHBOARD STATISTICS 2 x 2 DESIGN
+   ========================================= */
+
+.dashboard-stats,
+.stats-grid,
+.stats-container {
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 16px !important;
+    width: 100% !important;
+    margin: 25px 0 35px !important;
+}
+
+/* Individual statistic cards */
+.dashboard-stats > *,
+.stats-grid > *,
+.stats-container > * {
+    min-width: 0 !important;
+    width: auto !important;
+    min-height: 145px !important;
+    height: auto !important;
+
+    border-radius: 22px !important;
+    background: rgba(255,255,255,0.97) !important;
+
+    box-shadow:
+        0 8px 24px rgba(0,0,0,0.07),
+        0 2px 7px rgba(0,0,0,0.04) !important;
+
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+
+    text-align: center !important;
+
+    padding: 18px !important;
+    box-sizing: border-box !important;
+
+    transition:
+        transform 0.25s ease,
+        box-shadow 0.25s ease !important;
+}
+
+/* Touch / hover animation */
+.dashboard-stats > *:hover,
+.stats-grid > *:hover,
+.stats-container > *:hover {
+    transform: translateY(-5px) !important;
+
+    box-shadow:
+        0 14px 30px rgba(0,0,0,0.11) !important;
+}
+
+/* Icons */
+.dashboard-stats img,
+.stats-grid img,
+.stats-container img {
+    max-width: 58px !important;
+    max-height: 58px !important;
+    margin-bottom: 8px !important;
+}
+
+/* Numbers */
+.dashboard-stats .stat-number,
+.stats-grid .stat-number,
+.stats-container .stat-number {
+    font-size: 28px !important;
+    font-weight: 700 !important;
+    color: #20242a !important;
+    margin: 4px 0 !important;
+}
+
+/* Titles */
+.dashboard-stats .stat-title,
+.stats-grid .stat-title,
+.stats-container .stat-title {
+    font-size: 17px !important;
+    color: #3d4650 !important;
+}
+
+/* Mobile */
+@media (max-width: 600px) {
+
+    .dashboard-stats,
+    .stats-grid,
+    .stats-container {
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+        gap: 14px !important;
+    }
+
+    .dashboard-stats > *,
+    .stats-grid > *,
+    .stats-container > * {
+        min-height: 145px !important;
+        padding: 15px !important;
+        border-radius: 20px !important;
+    }
+
+    .dashboard-stats img,
+    .stats-grid img,
+    .stats-container img {
+        max-width: 52px !important;
+        max-height: 52px !important;
+    }
+
+    .dashboard-stats .stat-number,
+    .stats-grid .stat-number,
+    .stats-container .stat-number {
+        font-size: 25px !important;
+    }
+
+    .dashboard-stats .stat-title,
+    .stats-grid .stat-title,
+    .stats-container .stat-title {
+        font-size: 15px !important;
+    }
+}
+
+</style>
+
+
+<style>
+.admin-top-profile {
+    position: absolute;
+    top: 18px;
+    right: 20px;
+    z-index: 1000;
+}
+
+.admin-profile-link {
+    text-decoration: none;
+}
+
+.admin-profile-wrapper {
+    position: relative;
+    width: 62px;
+    height: 62px;
+}
+
+.admin-profile-circle {
+    width: 62px;
+    height: 62px;
+    border-radius: 50%;
+    object-fit: cover;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #eaf4ff;
+    border: 3px solid #ffffff;
+    box-shadow: 0 3px 12px rgba(0,0,0,.18);
+    font-size: 25px;
+}
+
+.admin-profile-placeholder {
+    color: #2563eb;
+    font-weight: 700;
+}
+
+.profile-plus {
+    position: absolute;
+    right: -2px;
+    bottom: -2px;
+    width: 23px;
+    height: 23px;
+    border-radius: 50%;
+    background: #2563eb;
+    color: white;
+    border: 2px solid white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    font-weight: bold;
+    line-height: 1;
+}
+
+@media (max-width: 600px) {
+    .admin-top-profile {
+        top: 12px;
+        right: 12px;
+    }
+
+    .admin-profile-wrapper,
+    .admin-profile-circle {
+        width: 54px;
+        height: 54px;
+    }
+
+    .profile-plus {
+        width: 21px;
+        height: 21px;
+        font-size: 16px;
+    }
+}
+</style>
+
+</head>
+
+<body>
+
+<div class="admin-top-profile">
+
+    <a href="/admin/profile" title="My Profile" class="admin-profile-link">
+
+        <div class="admin-profile-wrapper">
+
+            {% if current_admin and current_admin.profile_image %}
+                <img
+                    src="{{ url_for('static', filename='uploads/admins/' + current_admin.profile_image) }}"
+                    class="admin-profile-circle"
+                    alt="Admin Profile"
+                >
+            {% elif current_admin %}
+                <div class="admin-profile-circle admin-profile-placeholder">
+                    {{ current_admin.full_name[0]|upper }}
+                </div>
+            {% else %}
+                <div class="admin-profile-circle admin-profile-placeholder">
+                    👤
+                </div>
+            {% endif %}
+
+            <span class="profile-plus">+</span>
+
+        </div>
+
+    </a>
+
+</div>
+
+</div>
+
+
+<div class="dashboard">
+
+    <h1>👨‍💼 Admin Dashboard</h1>
+
+    <p class="page-subtitle">
+        Welcome, {{ name }}
+    </p>
+
+
+    <!-- Statistics -->
+
+    <div class="stats-grid">
+
+        <div class="stat-card">
+            <div class="stat-icon">📚</div>
+            <div class="stat-number">{{ total_books }}</div>
+            <div class="stat-label">Total Books</div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-icon">👨‍🎓</div>
+            <div class="stat-number">{{ total_students }}</div>
+            <div class="stat-label">Students</div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-icon">👨‍💼</div>
+            <div class="stat-number">{{ total_librarians }}</div>
+            <div class="stat-label">Librarians</div>
+        </div>
+
+        <div class="stat-card issued-books-card">
+            <div class="stat-top">
+                <div class="stat-icon issued-icon">📖</div>
+                <span class="stat-badge">ACTIVE</span>
+            </div>
+
+            <div class="stat-number">{{ issued_books }}</div>
+
+            <div class="stat-label">
+                Issued Books
+            </div>
+
+            <div class="stat-description">
+                Books currently with students
+            </div>
+        </div>
+
+    </div>
+
+
+    <!-- Quick Access -->
+
+    <div class="quick-title">
+
+        <h2>Quick Access</h2>
+
+        <p>
+            Manage your library from one place
+        </p>
+
+    </div>
+
+
+    <div class="quick-grid">
+
+<!-- ADD BOOK FEATURE -->
+<a class="quick-card" href="/admin/books/add">
+    <div class="quick-icon">📚</div>
+    <h3>Add Books</h3>
+    <p>Add new books to the college library</p>
+</a>
+
+    <a class="quick-card" href="/admin/notices">
+        <div class="quick-icon">📢</div>
+        <h3>Notice Board</h3>
+        <p>Create and manage college notices →</p>
+    </a>
+
+
+
+        <!-- Add Librarian -->
+
+        <a class="quick-card librarian-card"
+           href="/admin/librarians/add">
+
+            <div class="quick-icon">
+                👨‍💼
+            </div>
+
+            <h3>Add Librarian</h3>
+
+            <p>
+                Add and manage library staff
+            </p>
+
+        </a>
+
+
+        <!-- My Profile -->
+
+
+        <!-- Reports -->
+
+        <a class="quick-card reports-card"
+           href="/admin/reports">
+
+            <div class="quick-icon">
+                📊
+            </div>
+
+            <h3>Reports</h3>
+
+            <p>
+                Check library activity and reports
+            </p>
+
+            <div class="quick-arrow">
+                →
+            </div>
+
+        </a>
+
+
+        <!-- Magazines -->
+
+        <a class="quick-card magazine-card"
+           href="/admin/magazines">
+
+            <div class="quick-icon">
+                📰
+            </div>
+
+            <h3>Magazines</h3>
+
+            <p>
+                Manage college magazines and publications
+            </p>
+
+            <div class="quick-arrow">
+                →
+            </div>
+
+        </a>
+
+
+    </div>
+
+
+    <br><br>
+
+    <a href="/logout">
+        🚪 Logout
+    </a>
+
+</div>
+
+
+<script>
+
+window.addEventListener("load", function () {
+
+    const loader = document.getElementById("page-loader");
+
+    if (loader) {
+
+        setTimeout(function () {
+            loader.classList.add("hide");
+        }, 350);
+
+    }
+
+});
+
+</script>
+
+
+
+
+
+<!-- ADMIN PROFILE -->
+<a class="quick-card" href="/admin/account">
+    <div class="quick-icon">👤</div>
+    <h3>My Profile</h3>
+    <p>Manage your admin profile</p>
+</a>
+
+</body>
+</html>

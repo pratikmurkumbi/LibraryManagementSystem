@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% set title='My Books' %}
+{% block content %}
+<div class="dashboard">
+
+    <div class="header">
+        <h1>📚 My Books</h1>
+        <p>Books currently issued to you</p>
+    </div>
+
+    {% if books %}
+
+    <div class="book-container">
+        <table>
+
+            <thead>
+                <tr>
+                    <th>📖 Book</th>
+                    <th>✍️ Author</th>
+                    <th>📅 Issue Date</th>
+                    <th>📌 Status</th>
+                </tr>
+            </thead>
+
+            <tbody>
+            {% for book in books %}
+                <tr>
+                    <td><strong>{{ book.title }}</strong></td>
+                    <td>{{ book.author }}</td>
+                    <td>{{ book.issue_date }}</td>
+                    <td>
+                        <span class="status">
+                            {{ book.status }}
+                        </span>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+
+        </table>
+    </div>
+
+    {% else %}
+
+    <div class="empty">
+        <div class="empty-icon">📚</div>
+        <h2>No Books Currently Issued</h2>
+        <p>You don't have any books currently issued.</p>
+    </div>
+
+    {% endif %}
+
+    <a class="back" href="/student">
+        ← Back to Dashboard
+    </a>
+
+</div>
+{% endblock %}

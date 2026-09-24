@@ -1,0 +1,459 @@
+{% extends "base.html" %}
+{% set title='Admin Profile' %}
+{% block content %}
+<div class="legacy-page unified-page">
+<div class="profile-page">
+
+    <!-- PROFILE HEADER -->
+
+    <div class="profile-header">
+
+        <form
+            id="photo-form"
+            method="POST"
+            enctype="multipart/form-data"
+            style="display:none;"
+        >
+
+            <input
+                type="hidden"
+                name="action"
+                value="photo"
+            >
+
+            <input
+                id="profile-image-input"
+                type="file"
+                name="profile_image"
+                accept="image/jpeg,image/png,image/webp"
+            >
+
+        </form>
+
+
+        <div class="photo-wrapper">
+
+            {% if user.profile_image %}
+
+                <img
+                    class="profile-photo"
+                    id="profile-preview"
+                    src="{{ url_for('static', filename='uploads/admins/' + user.profile_image) }}"
+                    alt="Admin Photo"
+                >
+
+            {% else %}
+
+                <div
+                    class="profile-placeholder"
+                    id="profile-preview"
+                >
+                    {% if user.full_name %}
+                        {{ user.full_name[0]|upper }}
+                    {% else %}
+                        👤
+                    {% endif %}
+                </div>
+
+            {% endif %}
+
+
+            <!-- DIRECT IMAGE PICKER -->
+
+            <label
+                for="profile-image-input"
+                class="photo-plus"
+                title="Change profile photo"
+            >
+                +
+            </label>
+
+        </div>
+
+
+        <div class="profile-name">
+            {{ user.full_name }}
+        </div>
+
+        <div class="profile-username">
+            @{{ user.username }}
+        </div>
+
+    </div>
+
+
+    {% if success %}
+
+        <div class="message-success">
+            {{ success }}
+        </div>
+
+    {% endif %}
+
+
+    {% if error %}
+
+        <div class="message-error">
+            {{ error }}
+        </div>
+
+    {% endif %}
+
+
+    <!-- MY PROFILE -->
+
+    <div class="card-box">
+
+        <h2>👤 My Profile</h2>
+
+        <div class="detail-row">
+
+            <div class="detail-label">
+                Full Name
+            </div>
+
+            <div class="detail-value">
+                {{ user.full_name }}
+            </div>
+
+        </div>
+
+
+        <div class="detail-row">
+
+            <div class="detail-label">
+                Username
+            </div>
+
+            <div class="detail-value">
+                {{ user.username }}
+            </div>
+
+        </div>
+
+
+        <div class="detail-row">
+
+            <div class="detail-label">
+                Email
+            </div>
+
+            <div class="detail-value">
+                {{ user.email or "Not added" }}
+            </div>
+
+        </div>
+
+
+        <div class="detail-row">
+
+            <div class="detail-label">
+                Phone
+            </div>
+
+            <div class="detail-value">
+                {{ user.phone or "Not added" }}
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- EDIT CURRENT ADMIN -->
+
+    <a
+        href="#edit"
+        class="menu-button"
+        onclick="
+            document.getElementById('edit-section').style.display='block';
+            this.style.display='none';
+            return false;
+        "
+    >
+
+        <div class="menu-left">
+
+            <div class="menu-icon">
+                ✏️
+            </div>
+
+            <div>
+
+                <div class="menu-title">
+                    Edit Current Admin Details
+                </div>
+
+                <div class="menu-subtitle">
+                    Change name, username, email and phone
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="arrow">
+            ›
+        </div>
+
+    </a>
+
+
+    <div
+        id="edit-section"
+        class="card-box edit-section"
+    >
+
+        <h2>✏️ Edit Admin Details</h2>
+
+        <form method="POST">
+
+            <input
+                type="hidden"
+                name="action"
+                value="edit_details"
+            >
+
+            <label>Full Name</label>
+
+            <input
+                type="text"
+                name="full_name"
+                value="{{ user.full_name }}"
+                required
+            >
+
+
+            <label>Username</label>
+
+            <input
+                type="text"
+                name="username"
+                value="{{ user.username }}"
+                required
+            >
+
+
+            <label>Email</label>
+
+            <input
+                type="email"
+                name="email"
+                value="{{ user.email or '' }}"
+            >
+
+
+            <label>Phone Number</label>
+
+            <input
+                type="tel"
+                name="phone"
+                value="{{ user.phone or '' }}"
+            >
+
+
+            <button type="submit">
+                💾 Save Admin Details
+            </button>
+
+        </form>
+
+    </div>
+
+
+    <!-- ADMIN MANAGEMENT -->
+
+    <a
+        class="menu-button"
+        href="/admin/manage-admins"
+    >
+
+        <div class="menu-left">
+
+            <div class="menu-icon">
+                👥
+            </div>
+
+            <div>
+
+                <div class="menu-title">
+                    Admin Management
+                </div>
+
+                <div class="menu-subtitle">
+                    Add or manage administrator accounts
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="arrow">
+            ›
+        </div>
+
+    </a>
+
+
+    <!-- CHANGE PASSWORD -->
+
+    <a
+        href="#password"
+        class="menu-button"
+        onclick="
+            document.getElementById('password-section').style.display='block';
+            this.style.display='none';
+            return false;
+        "
+    >
+
+        <div class="menu-left">
+
+            <div class="menu-icon">
+                🔐
+            </div>
+
+            <div>
+
+                <div class="menu-title">
+                    Change Password
+                </div>
+
+                <div class="menu-subtitle">
+                    Update your administrator password
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="arrow">
+            ›
+        </div>
+
+    </a>
+
+
+    <!-- PASSWORD -->
+
+    <div
+        id="password-section"
+        class="card-box edit-section"
+    >
+
+        <h2>🔐 Change Password</h2>
+
+        <form method="POST">
+
+            <input
+                type="hidden"
+                name="action"
+                value="password"
+            >
+
+            <label>Current Password</label>
+
+            <input
+                type="password"
+                name="old_password"
+                required
+            >
+
+
+            <label>New Password</label>
+
+            <input
+                type="password"
+                name="new_password"
+                required
+            >
+
+
+            <label>Confirm New Password</label>
+
+            <input
+                type="password"
+                name="confirm_password"
+                required
+            >
+
+
+            <button type="submit">
+                🔐 Change Password
+            </button>
+
+        </form>
+
+    </div>
+
+
+    <a
+        class="button back-button"
+        href="/admin"
+    >
+        ← Back to Dashboard
+    </a>
+
+</div>
+
+
+<script>
+
+const imageInput =
+    document.getElementById("profile-image-input");
+
+const photoForm =
+    document.getElementById("photo-form");
+
+const preview =
+    document.getElementById("profile-preview");
+
+
+imageInput.addEventListener("change", function () {
+
+    if (!this.files || !this.files[0]) {
+        return;
+    }
+
+    const file = this.files[0];
+
+    /*
+       Show preview immediately.
+    */
+
+    const reader = new FileReader();
+
+    reader.onload = function (event) {
+
+        if (preview.tagName === "IMG") {
+
+            preview.src = event.target.result;
+
+        } else {
+
+            preview.outerHTML =
+                '<img id="profile-preview" ' +
+                'class="profile-photo" ' +
+                'src="' + event.target.result + '">';
+
+        }
+
+    };
+
+    reader.readAsDataURL(file);
+
+
+    /*
+       Automatically submit.
+       No separate upload section.
+    */
+
+    setTimeout(function () {
+        photoForm.submit();
+    }, 150);
+
+});
+
+</script>
+</div>
+{% endblock %}

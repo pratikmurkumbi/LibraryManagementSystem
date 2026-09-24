@@ -1,0 +1,18 @@
+{% extends "base.html" %}{% set title="Librarian Dashboard" %}{% set page_title="Library Operations" %}
+{% block content %}<div class="modern-page">
+<div class="hero"><h2>Welcome, {{ name }} 📖</h2><p>Handle daily library operations, issue and return books, students and digital resources.</p></div>
+<div class="stat-grid">
+{% for icon,label,value in [("📚","Books",stats.books),("👨‍🎓","Students",stats.students),("📤","Issued",stats.issued),("📱","E-Books",stats.ebooks),("📰","Journals",stats.journals),("🗞️","Magazines",stats.magazines),("🎉","Events",stats.events)] %}
+<div class="stat-card"><div class="stat-icon">{{icon}}</div><div><small>{{label}}</small><strong>{{value}}</strong></div></div>
+{% endfor %}
+</div>
+<div class="section-head"><div><h2>Daily Operations</h2><p>Quick access to the tools you use most.</p></div></div>
+<div class="action-grid">
+<a class="resource-card action-card" href="/admin/books"><div class="icon">📚</div><h3>Manage Books</h3><p>Add, edit and organize books.</p></a>
+<a class="resource-card action-card" href="/librarian/issue"><div class="icon">📤</div><h3>Issue Book</h3><p>Issue a book to a student.</p></a>
+<a class="resource-card action-card" href="/librarian/issues"><div class="icon">↩️</div><h3>Returns & Issues</h3><p>Track issued and returned books.</p></a>
+<a class="resource-card action-card" href="/librarian/students"><div class="icon">👨‍🎓</div><h3>Students</h3><p>View and manage library students.</p></a>
+<a class="resource-card action-card" href="/admin/ebooks"><div class="icon">📱</div><h3>E-Books</h3><p>Manage digital PDF resources.</p></a>
+<a class="resource-card action-card" href="/admin/journals"><div class="icon">📰</div><h3>Journals</h3><p>Manage journal resources.</p></a>
+<a class="resource-card action-card" href="/admin/magazines"><div class="icon">🗞️</div><h3>Magazines</h3><p>Manage magazine issues.</p></a>
+</div></div>{% endblock %}

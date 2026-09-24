@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% set title='Reservation Management' %}
+{% block content %}
+
+
+<div class="dashboard">
+
+    <h1>🔖 Reservation Management</h1>
+
+    {% if reservations %}
+
+    <table>
+
+        <tr>
+            <th>Book</th>
+            <th>Student</th>
+            <th>Roll No</th>
+            <th>Date</th>
+            <th>Status</th>
+        </tr>
+
+        {% for reservation in reservations %}
+
+        <tr>
+
+            <td>{{ reservation.title }}</td>
+
+            <td>{{ reservation.full_name }}</td>
+
+            <td>{{ reservation.roll_no }}</td>
+
+            <td>{{ reservation.reservation_date }}</td>
+
+            <td>{{ reservation.status }}</td>
+
+        </tr>
+
+        {% endfor %}
+
+    </table>
+
+    {% else %}
+
+    <div class="card">
+
+        <h3>📋 No Reservations</h3>
+
+        <p>No reservation records are available.</p>
+
+    </div>
+
+    {% endif %}
+
+    <br>
+
+    <a class="button" href="/admin">
+        ← Back to Dashboard
+    </a>
+
+</div>
+{% endblock %}

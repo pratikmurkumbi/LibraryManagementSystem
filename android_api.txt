@@ -1,0 +1,267 @@
+@app.route("/api/login", methods=["POST"])
+def api_login():
+    data = request.get_json(silent=True) or {}
+
+    username = (data.get("username") or "").strip()
+    password = data.get("password") or ""
+
+    if not username or not password:
+        return jsonify({
+            "success": False,
+            "message": "Username and password are required"
+        }), 400
+
+    conn = get_connection()
+    user = conn.execute(
+        "SELECT id, username, password, full_name, role, profile_image, phone, email "
+        "FROM users WHERE username = ?",
+        (username,)
+    ).fetchone()
+
+    if not user:
+        conn.close()
+        return jsonify({
+            "success": False,
+            "message": "Invalid username or password"
+        }), 401
+
+    if not check_password_hash(user["password"], password):
+        conn.close()
+        return jsonify({
+            "success": False,
+            "message": "Invalid username or password"
+        }), 401
+
+    result = {
+        "id": user["id"],
+        "username": user["username"],
+        "full_name": user["full_name"],
+        "role": user["role"],
+        "profile_image": user["profile_image"],
+        "phone": user["phone"],
+        "email": user["email"]
+    }
+
+    if user["role"] == "student":
+        student = conn.execute("""
+            SELECT id, roll_no, course, semester, academic_year,
+                   profile_image, department
+            FROM students
+            WHERE user_id = ?
+        """, (user["id"],)).fetchone()
+
+        if student:
+            result["student"] = dict(student)
+
+    conn.close()
+
+    return jsonify({
+        "success": True,
+        "user": result
+    })
+
+
+@app.route("/api/student/events", methods=["GET"])
+def api_student_events():
+    conn = get_connection()
+
+    events = conn.execute("""
+        SELECT id, title, description, event_date, event_time,
+               venue, image_filename, video_filename
+        FROM events
+        ORDER BY event_date DESC, id DESC
+    """).fetchall()
+
+    conn.close()
+
+    return jsonify({
+        "success": True,
+        "events": [dict(event) for event in events]
+    })
+
+
+@app.route("/api/student/books", methods=["GET"])
+def api_student_books():
+    conn = get_connection()
+
+    books = conn.execute("""
+        SELECT id, title, author, category, isbn, quantity, image
+        FROM books
+        ORDER BY title COLLATE NOCASE
+    """).fetchall()
+
+    conn.close()
+
+    return jsonify({
+        "success": True,
+        "books": [dict(book) for book in books]
+    })
+
+
+@app.route("/api/student/notices", methods=["GET"])
+def api_student_notices():
+    conn = get_connection()
+
+    notices = conn.execute("""
+        SELECT id, title, description, notice_type, created_at
+        FROM notices
+        ORDER BY id DESC
+    """).fetchall()
+
+    conn.close()
+
+    return jsonify({
+        "success": True,
+        "notices": [dict(notice) for notice in notices]
+    })
+
+
+@app.route("/api/student/profile/<int:user_id>", methods=["GET"])
+def api_student_profile(user_id):
+    conn = get_connection()
+
+    user = conn.execute("""
+        SELECT id, username, full_name, role, profile_image, phone, email
+        FROM users
+        WHERE id = ?
+    """, (user_id,)).fetchone()
+
+    if not user:
+        conn.close()
+        return jsonify({
+            "success": False,
+            "message": "User not found"
+        }), 404
+
+    student = conn.execute("""
+        SELECT id, roll_no, course, semester, academic_year,
+               profile_image, department
+        FROM students
+        WHERE user_id = ?
+    """, (user_id,)).fetchone()
+
+    conn.close()
+
+    return jsonify({
+        "success": True,
+        "user": dict(user),
+        "student": dict(student) if student else None
+    })
+
+
+@app.route("/api/student/my-books/<int:user_id>", methods=["GET"])
+def api_student_my_books(user_id):
+    conn = get_connection()
+
+    student = conn.execute("""
+        SELECT id
+        FROM students
+        WHERE user_id = ?
+    """, (user_id,)).fetchone()
+
+    if not student:
+        conn.close()
+        return jsonify({
+            "success": False,
+            "message": "Student not found"
+        }), 404
+
+    rows = conn.execute("""
+        SELECT
+            issues.id,
+            issues.issue_date,
+            issues.return_date,
+            issues.status,
+            issues.due_date,
+            issues.fine,
+            books.id AS book_id,
+            books.title,
+            books.author,
+            books.category,
+            books.isbn
+        FROM issues
+        JOIN books ON books.id = issues.book_id
+        WHERE issues.student_id = ?
+        ORDER BY issues.id DESC
+    """, (student["id"],)).fetchall()
+
+    conn.close()
+
+    return jsonify({
+        "success": True,
+        "books": [dict(row) for row in rows]
+    })
+
+
+@app.route("/api/student/dashboard/<int:user_id>", methods=["GET"])
+def api_student_dashboard(user_id):
+    conn = get_connection()
+
+    user = conn.execute("""
+        SELECT id, username, full_name, role, profile_image
+        FROM users
+        WHERE id = ?
+    """, (user_id,)).fetchone()
+
+    if not user or user["role"] != "student":
+        conn.close()
+        return jsonify({
+            "success": False,
+            "message": "Student not found"
+        }), 404
+
+    student = conn.execute("""
+        SELECT id, roll_no, course, semester, academic_year, department
+        FROM students
+        WHERE user_id = ?
+    """, (user_id,)).fetchone()
+
+    books_count = conn.execute(
+        "SELECT COUNT(*) FROM books"
+    ).fetchone()[0]
+
+    issued_count = 0
+    if student:
+        issued_count = conn.execute("""
+            SELECT COUNT(*)
+            FROM issues
+            WHERE student_id = ? AND status = 'Issued'
+        """, (student["id"],)).fetchone()[0]
+
+    events_count = conn.execute(
+        "SELECT COUNT(*) FROM events"
+    ).fetchone()[0]
+
+    notices_count = conn.execute(
+        "SELECT COUNT(*) FROM notices"
+    ).fetchone()[0]
+
+    conn.close()
+
+    return jsonify({
+        "success": True,
+        "user": dict(user),
+        "student": dict(student) if student else None,
+        "statistics": {
+            "total_books": books_count,
+            "my_issued_books": issued_count,
+            "events": events_count,
+            "notices": notices_count
+        }
+    })
+
+if __name__ == "__main__":
+
+    init_database()
+
+    app.run(
+        host="0.0.0.0",
+        port=5000,
+        debug=True
+    )
+
+
+# ============================================================
+# ANDROID API ROUTES
+# ============================================================
+

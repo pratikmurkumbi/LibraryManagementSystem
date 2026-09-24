@@ -1,0 +1,32 @@
+{% extends "base.html" %}{% set title="Admin Dashboard" %}{% set page_title="Library Administration" %}
+{% block content %}<div class="modern-page">
+<div class="hero"><h2>Welcome, {{ name }} 👋</h2><p>Manage the complete college library, digital resources, students, staff and reports from one place.</p></div>
+<div class="stat-grid">
+<div class="stat-card"><div class="stat-icon">📚</div><div><small>Books</small><strong>{{ total_books }}</strong></div></div>
+<div class="stat-card"><div class="stat-icon">👨‍🎓</div><div><small>Students</small><strong>{{ total_students }}</strong></div></div>
+<div class="stat-card"><div class="stat-icon">👨‍🏫</div><div><small>Librarians</small><strong>{{ total_librarians }}</strong></div></div>
+<div class="stat-card"><div class="stat-icon">📤</div><div><small>Issued</small><strong>{{ issued_books }}</strong></div></div>
+<div class="stat-card"><div class="stat-icon">📱</div><div><small>E-Books</small><strong>{{ total_ebooks }}</strong></div></div>
+<div class="stat-card"><div class="stat-icon">📰</div><div><small>Journals</small><strong>{{ total_journals }}</strong></div></div>
+<div class="stat-card"><div class="stat-icon">🗞️</div><div><small>Magazines</small><strong>{{ total_magazines }}</strong></div></div>
+<div class="stat-card"><div class="stat-icon">🎉</div><div><small>Events</small><strong>{{ total_events }}</strong></div></div>
+</div>
+<div class="section-head"><div><h2>Library Management</h2><p>All major database-backed modules in one dashboard.</p></div></div>
+<div class="action-grid">
+{% for icon,name,desc,url in [
+("📚","Books","Catalog, covers, quantity and ISBN","/admin/books"),
+("📱","E-Books","Upload and manage legal PDF resources","/admin/ebooks"),
+("📰","Journals","Technical and national journals","/admin/journals"),
+("🗞️","Magazines","College and general magazines","/admin/magazines"),
+("👨‍🎓","Students","Student accounts and admission details","/admin/students"),
+("👨‍🏫","Librarians","Library staff management","/admin/librarians"),
+("👥","Users","Admin and user accounts","/admin/users"),
+("📊","Reports","Library reports and summaries","/admin/reports"),
+("📈","Analytics","Usage and library analytics","/admin/analytics"),
+("🏛️","Departments","Department master data","/admin/departments"),
+("🗂️","Categories","Book category management","/admin/book-categories"),
+("📝","Activity","Librarian activity log","/admin/librarian-activity")
+] %}
+<a class="resource-card action-card" href="{{url}}"><div class="icon">{{icon}}</div><h3>{{name}}</h3><p>{{desc}}</p></a>
+{% endfor %}
+</div></div>{% endblock %}

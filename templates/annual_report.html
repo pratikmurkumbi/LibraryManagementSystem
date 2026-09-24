@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+{% set title='Annual Report' %}
+{% block content %}
+<div class="legacy-page unified-page">
+<div class="page">
+
+<div class="header">
+<h1>📆 Annual Library Report</h1>
+<p>Government Polytechnic Haliyal Library Management System</p>
+</div>
+
+<div class="filter">
+
+<form method="GET">
+
+<label>Academic Year</label>
+
+<input
+type="text"
+name="year"
+placeholder="Example: 2026-27"
+value="{{ year }}"
+required>
+
+<button type="submit">
+📊 Generate Annual Report
+</button>
+
+</form>
+
+</div>
+
+{% if year %}
+
+<div class="table-box">
+
+<table>
+
+<tr>
+<th>Student</th>
+<th>Roll No</th>
+<th>Course</th>
+<th>Semester</th>
+<th>Academic Year</th>
+<th>Book</th>
+<th>Issue Date</th>
+<th>Return Date</th>
+<th>Status</th>
+<th>Fine</th>
+</tr>
+
+{% for row in report %}
+
+<tr>
+<td>{{ row.student_name }}</td>
+<td>{{ row.roll_no }}</td>
+<td>{{ row.course }}</td>
+<td>{{ row.semester }}</td>
+<td>{{ row.academic_year }}</td>
+<td>{{ row.book_title }}</td>
+<td>{{ row.issue_date }}</td>
+<td>{{ row.return_date or "-" }}</td>
+<td>{{ row.status }}</td>
+<td>₹{{ row.fine or 0 }}</td>
+</tr>
+
+{% else %}
+
+<tr>
+<td colspan="10" style="text-align:center;">
+No records found for {{ year }}.
+</td>
+</tr>
+
+{% endfor %}
+
+</table>
+
+</div>
+
+{% endif %}
+
+<br>
+<a href="/admin/reports">← Back to Reports</a>
+
+</div>
+
+
+<div class="report-download-box">
+    <a class="report-download-button"
+       href="/admin/reports/annual/pdf?year={{ selected_year }}">
+        ⬇️ Download Annual Report PDF
+    </a>
+</div>
+</div>
+{% endblock %}

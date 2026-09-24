@@ -1,0 +1,9 @@
+{% extends "base.html" %}{% set title='Verify Contact Details' %}{% set page_title='Account Verification' %}
+{% block content %}<div class="modern-page"><div class="form-panel" style="max-width:760px">
+<h2>🔐 Verify your contact details</h2><p>For account security, verify the email address and phone number saved by the library administrator.</p>
+{% if error %}<div class="error">{{error}}</div>{% endif %}{% if message %}<div class="success">{{message}}</div>{% endif %}
+<div class="verification-grid">
+<div class="verification-card"><h3>📱 Phone</h3><p>{{ user.phone or 'No phone number added' }}</p>{% if user.phone_verified %}<span class="verified-badge">✓ Verified</span>{% elif user.phone %}<form method="POST"><input type="hidden" name="action" value="send_sms"><button>Send SMS OTP</button></form><form method="POST" style="margin-top:10px"><input type="hidden" name="action" value="verify_sms"><input name="otp" inputmode="numeric" maxlength="6" placeholder="Enter SMS OTP" required><button>Verify Phone</button></form>{% else %}<small class="muted">Ask an administrator to add your phone number.</small>{% endif %}</div>
+<div class="verification-card"><h3>✉️ Email</h3><p>{{ user.email or 'No email address added' }}</p>{% if user.email_verified %}<span class="verified-badge">✓ Verified</span>{% elif user.email %}<form method="POST"><input type="hidden" name="action" value="send_email"><button>Send Email OTP</button></form><form method="POST" style="margin-top:10px"><input type="hidden" name="action" value="verify_email"><input name="otp" inputmode="numeric" maxlength="6" placeholder="Enter email OTP" required><button>Verify Email</button></form>{% else %}<small class="muted">Ask an administrator to add your email address.</small>{% endif %}</div>
+</div><a class="button" href="{{url_for('home')}}" style="margin-top:18px">Continue</a>
+</div></div>{% endblock %}

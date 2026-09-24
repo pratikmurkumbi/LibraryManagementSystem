@@ -1,0 +1,136 @@
+{% extends "base.html" %}
+{% set title='Notifications' %}
+{% block content %}
+<div class="legacy-page unified-page">
+<div class="dashboard">
+
+    <div class="notification-header">
+
+        <div>
+
+            <h1>🔔 Notifications</h1>
+
+            {% if unread_notifications > 0 %}
+
+                <p>
+                    You have
+                    <span class="notification-badge">
+                        {{ unread_notifications }}
+                    </span>
+                    unread notification{% if unread_notifications != 1 %}s{% endif %}
+                </p>
+
+            {% else %}
+
+                <p class="page-subtitle">
+                    You are all caught up.
+                </p>
+
+            {% endif %}
+
+        </div>
+
+        {% if notifications %}
+
+        <form
+            method="POST"
+            action="{{ url_for('mark_all_notifications_read') }}"
+        >
+
+            <button class="button" type="submit">
+                ✔️ Mark All as Read
+            </button>
+
+        </form>
+
+        {% endif %}
+
+    </div>
+
+
+    {% if notifications %}
+
+        {% for notification in notifications %}
+
+        <div class="
+            notification-card
+            {% if notification.is_read %}
+                read
+            {% else %}
+                unread
+            {% endif %}
+        ">
+
+            <div class="notification-icon">
+                {% if notification.is_read %}
+                    🔔
+                {% else %}
+                    🔔
+                {% endif %}
+            </div>
+
+            <div class="notification-message">
+                {{ notification.message }}
+            </div>
+
+            <div class="notification-date">
+                📅 {{ notification.created_at }}
+            </div>
+
+            {% if not notification.is_read %}
+
+            <div class="notification-actions">
+
+                <form
+                    method="POST"
+                    action="{{ url_for(
+                        'mark_notification_read',
+                        notification_id=notification.id
+                    ) }}"
+                >
+
+                    <button
+                        class="read-button"
+                        type="submit"
+                    >
+                        ✔️ Mark as Read
+                    </button>
+
+                </form>
+
+            </div>
+
+            {% endif %}
+
+        </div>
+
+        {% endfor %}
+
+    {% else %}
+
+        <div class="empty-notifications">
+
+            <div class="notification-icon">
+                🔔
+            </div>
+
+            <h2>No Notifications</h2>
+
+            <p>
+                You don't have any notifications yet.
+            </p>
+
+        </div>
+
+    {% endif %}
+
+
+    <br>
+
+    <a href="/student">
+        ← Back to Student Dashboard
+    </a>
+
+</div>
+</div>
+{% endblock %}

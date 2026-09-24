@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+{% set title='Add Librarian' %}
+{% block content %}
+
+<div class="dashboard">
+
+    <h1>👨‍💼 Add New Librarian</h1>
+
+    <p class="page-subtitle">
+        Create a new librarian account
+    </p>
+
+    <div class="card form-card">
+
+        <form method="POST">
+
+            <label for="full_name">
+                Full Name
+            </label>
+
+            <input
+                type="text"
+                id="full_name"
+                name="full_name"
+                placeholder="Enter full name"
+                autocomplete="name"
+                required
+            >
+
+            <label for="username">
+                Username
+            </label>
+
+            <input
+                type="text"
+                id="username"
+                name="username"
+                placeholder="Enter username"
+                autocomplete="username"
+                required
+            >
+
+            <label for="password">
+                Password
+            </label>
+
+            <input
+                type="password"
+                id="password"
+                name="password"
+                placeholder="Enter password"
+                autocomplete="new-password"
+                required
+            >
+
+            <label for="employee_id">
+                Employee ID
+            </label>
+
+            <input
+                type="text"
+                id="employee_id"
+                name="employee_id"
+                placeholder="Enter employee ID"
+                required
+            >
+
+            <button type="submit">
+                ➕ Create Librarian
+            </button>
+
+        </form>
+
+    </div>
+
+    <br>
+
+    <a class="button" href="/admin/librarians">
+        ← Back to Librarians
+    </a>
+
+</div>
+{% endblock %}

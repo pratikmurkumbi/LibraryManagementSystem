@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+{% set title='College Events' %}
+{% block content %}
+<div class="legacy-page unified-page">
+<div class="events-admin">
+    <div class="panel">
+        <h1>🎉 College Events</h1>
+        <p class="muted">Librarians can publish college events for students with photos and videos.</p>
+
+        {% if success %}<div class="notice success">{{ success }}</div>{% endif %}
+        {% if error %}<div class="notice error">{{ error }}</div>{% endif %}
+
+        <form method="POST" enctype="multipart/form-data">
+            <input type="hidden" name="action" value="add">
+            <div class="form-grid">
+                <div class="full">
+                    <label>Event Title</label>
+                    <input name="title" placeholder="Annual Day, Sports Day, Tech Fest..." required>
+                </div>
+                <div>
+                    <label>Date</label>
+                    <input type="date" name="event_date" required>
+                </div>
+                <div>
+                    <label>Time</label>
+                    <input type="time" name="event_time">
+                </div>
+                <div class="full">
+                    <label>Venue</label>
+                    <input name="venue" placeholder="College Auditorium / Ground / Seminar Hall">
+                </div>
+                <div class="full">
+                    <label>Description</label>
+                    <textarea name="description" placeholder="Write details about the event..."></textarea>
+                </div>
+                <div>
+                    <label>Event Photo</label>
+                    <input type="file" name="event_image" accept=".jpg,.jpeg,.png,.webp">
+                </div>
+                <div>
+                    <label>Event Video</label>
+                    <input type="file" name="event_video" accept=".mp4,.webm,.mov,.m4v">
+                </div>
+                <div class="full">
+                    <button type="submit">🎉 Publish Event</button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <div class="panel">
+        <h2>📅 Existing Events</h2>
+        {% if events %}
+            {% for event in events %}
+            <div class="event-admin-card">
+                {% if event.image_filename %}
+                <img class="event-admin-img" src="{{ url_for('static', filename='uploads/events/' + event.image_filename) }}" alt="{{ event.title }}">
+                {% else %}
+                <div class="event-admin-img" style="display:flex;align-items:center;justify-content:center;font-size:45px">🎉</div>
+                {% endif %}
+                <div class="event-admin-info">
+                    <h3>{{ event.title }}</h3>
+                    <div class="muted">
+                        📅 {{ event.event_date }}
+                        {% if event.event_time %} · ⏰ {{ event.event_time }}{% endif %}
+                        {% if event.venue %} · 📍 {{ event.venue }}{% endif %}
+                    </div>
+                    {% if event.description %}<p>{{ event.description }}</p>{% endif %}
+                    {% if event.video_filename %}
+                    <div class="event-admin-video"><video controls preload="metadata"><source src="{{ url_for('static', filename='uploads/events/' + event.video_filename) }}"></video></div>
+                    {% endif %}
+                    <a class="button" href="{{ url_for('event_detail', event_id=event.id) }}">View Event</a>
+                </div>
+            </div>
+            {% endfor %}
+        {% else %}
+            <p class="muted">No events have been added yet.</p>
+        {% endif %}
+    </div>
+
+    <a class="button" href="/librarian">← Back to Dashboard</a>
+</div>
+</div>
+{% endblock %}

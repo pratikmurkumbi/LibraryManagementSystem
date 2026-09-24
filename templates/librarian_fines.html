@@ -1,0 +1,2 @@
+{% extends "base.html" %}{% set title='Fine System' %}{% set page_title='Fine System' %}
+{% block content %}<div class="modern-page"><div class="section-head"><div><h2>💰 Fine System</h2><p>Review current and recorded fines.</p></div><a class="btn" href="{{url_for('librarian_late_notifications')}}">⏰ Late Alerts</a></div><div class="panel"><p>Fines are calculated automatically at ₹5 per overdue day.</p><a class="btn" href="{{url_for('issued_books')}}">Open Returns / Issues</a></div></div>{% endblock %}

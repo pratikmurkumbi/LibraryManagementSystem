@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>My Books</title>
+</head>
+
+<body>
+
+<div id="page-loader">
+    <div class="loader-content">
+        <div class="loader-logo">📚</div>
+        <div class="loader-title">Library Management System</div>
+        <div class="loader-text">Loading...</div>
+        <div class="loader-spinner"></div>
+    </div>
+</div>
+
+
+<div class="dashboard">
+
+    <h1>📚 My Books</h1>
+
+    <table border="1" cellpadding="8">
+
+        <tr>
+            <th>Book</th>
+            <th>Author</th>
+            <th>Issue Date</th>
+            <th>Status</th>
+        </tr>
+
+        {% for book in books %}
+
+        <tr>
+            <td>{{ book.title }}</td>
+            <td>{{ book.author }}</td>
+            <td>{{ book.issue_date }}</td>
+            <td>{{ book.status }}</td>
+        </tr>
+
+        {% else %}
+
+        <tr>
+            <td colspan="4">
+                You don't have any books currently issued.
+            </td>
+        </tr>
+
+        {% endfor %}
+
+    </table>
+
+    <br>
+
+    <a href="/student">
+        ← Back to Dashboard
+    </a>
+
+</div>
+
+
+<script>
+window.addEventListener("load", function () {
+    const loader = document.getElementById("page-loader");
+
+    if (loader) {
+        setTimeout(function () {
+            loader.classList.add("hide");
+        }, 350);
+    }
+});
+</script>
+
+</body>
+</html>

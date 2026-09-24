@@ -1,0 +1,111 @@
+{% extends "base.html" %}
+{% set title='College Notice Board' %}
+{% block content %}
+<div class="legacy-page unified-page">
+<div class="dashboard">
+
+    <h1>📢 College Notice Board</h1>
+
+    <p class="page-subtitle">
+        Publish important college and library announcements
+    </p>
+
+    <div class="notice-form">
+
+        <h2>➕ Create New Notice</h2>
+
+        <form method="POST">
+
+            <label>Notice Title</label>
+
+            <input
+                type="text"
+                name="title"
+                placeholder="Enter notice title"
+                required
+            >
+
+            <label>Notice Type</label>
+
+            <select name="notice_type">
+                <option>General</option>
+                <option>Important</option>
+                <option>Exam</option>
+                <option>Library</option>
+                <option>Event</option>
+                <option>Holiday</option>
+            </select>
+
+            <label>Description</label>
+
+            <textarea
+                name="description"
+                placeholder="Write notice details..."
+                required
+            ></textarea>
+
+            <button class="button" type="submit">
+                📢 Publish Notice
+            </button>
+
+        </form>
+
+    </div>
+
+    <h2>📋 Published Notices</h2>
+
+    {% for notice in notices %}
+
+    <div class="notice-card">
+
+        <span class="notice-type">
+            {{ notice.notice_type }}
+        </span>
+
+        <h2>{{ notice.title }}</h2>
+
+        <p>{{ notice.description }}</p>
+
+        <div class="notice-date">
+            📅 {{ notice.created_at }}
+            {% if notice.created_by_name %}
+                · By {{ notice.created_by_name }}
+            {% endif %}
+        </div>
+
+        <form
+            method="POST"
+            action="{{ url_for('delete_notice',
+                              notice_id=notice.id) }}"
+            onsubmit="return confirm('Delete this notice?');"
+        >
+
+            <button
+                class="delete-notice"
+                type="submit"
+            >
+                🗑️ Delete
+            </button>
+
+        </form>
+
+    </div>
+
+    {% else %}
+
+    <div class="notice-card">
+        <h2>📭 No Notices</h2>
+        <p>No notices have been published yet.</p>
+    </div>
+
+    {% endfor %}
+
+    <br>
+
+    <a href="/admin">
+        ← Back to Admin Dashboard
+    </a>
+
+</div>
+</div>
+{% endblock %}

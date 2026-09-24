@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>My Reservations</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body>
+
+<div class="dashboard">
+
+    <h1>🔖 My Reservations</h1>
+
+    {% if reservations %}
+
+    <table>
+
+        <tr>
+            <th>Book</th>
+            <th>Author</th>
+            <th>Date</th>
+            <th>Status</th>
+            <th>Action</th>
+        </tr>
+
+        {% for reservation in reservations %}
+
+        <tr>
+
+            <td>{{ reservation.title }}</td>
+
+            <td>{{ reservation.author }}</td>
+
+            <td>{{ reservation.reservation_date }}</td>
+
+            <td>
+{% if reservation.status == "Pending" %}
+    ⏳ Pending
+{% elif reservation.status == "Approved" %}
+    ✅ Approved
+{% elif reservation.status == "Rejected" %}
+    ❌ Rejected
+{% elif reservation.status == "Cancelled" %}
+    🚫 Cancelled
+{% else %}
+    {{ reservation.status }}
+{% endif %}
+</td>
+
+            <td>
+
+                {% if reservation.status in ["Pending", "Approved"] %}
+
+                <form method="POST"
+                      action="/student/reservations/cancel/{{ reservation.id }}">
+
+                    <button type="submit">
+                        Cancel
+                    </button>
+
+                </form>
+
+                {% else %}
+
+                -
+
+                {% endif %}
+
+            </td>
+
+        </tr>
+
+        {% endfor %}
+
+    </table>
+
+    {% else %}
+
+    <div class="card">
+
+        <h3>🔖 No Reservations</h3>
+
+        <p>You have no book reservations.</p>
+
+    </div>
+
+    {% endif %}
+
+    <br>
+
+    <a class="button" href="/student">
+        ← Back to Dashboard
+    </a>
+
+</div>
+
+</body>
+</html>

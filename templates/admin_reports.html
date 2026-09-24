@@ -1,0 +1,214 @@
+{% extends "base.html" %}
+{% set title='Admin Reports' %}
+{% block content %}
+
+
+<div class="dashboard">
+
+    <h1>📊 Library Reports</h1>
+
+    <h2>Summary</h2>
+
+    <div class="stats">
+
+        <div class="stat-card">
+            <div class="stat-icon">📚</div>
+            <h3>{{ total_books }}</h3>
+            <p>Total Books</p>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-icon">👨‍🎓</div>
+            <h3>{{ total_students }}</h3>
+            <p>Students</p>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-icon">👨‍💼</div>
+            <h3>{{ total_librarians }}</h3>
+            <p>Librarians</p>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-icon">📖</div>
+            <h3>{{ issued_count }}</h3>
+            <p>Currently Issued</p>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-icon">✅</div>
+            <h3>{{ returned_count }}</h3>
+            <p>Returned</p>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-icon">⚠️</div>
+            <h3>{{ overdue_count }}</h3>
+            <p>Overdue</p>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-icon">💰</div>
+            <h3>₹{{ total_fine }}</h3>
+            <p>Total Fine</p>
+        </div>
+
+    </div>
+
+
+    <h2 class="section-title">
+        🔎 Search & Filter
+    </h2>
+
+    <div class="login-box">
+
+        <form method="GET"
+              action="/admin/reports">
+
+            <label>Search</label>
+
+            <input
+                type="text"
+                name="search"
+                value="{{ search }}"
+                placeholder="Book, student or roll number"
+            >
+
+
+            <label>Status</label>
+
+            <select name="status">
+
+                <option value=""
+                    {% if not status_filter %}selected{% endif %}>
+                    All
+                </option>
+
+                <option value="Issued"
+                    {% if status_filter == "Issued" %}selected{% endif %}>
+                    Issued
+                </option>
+
+                <option value="Returned"
+                    {% if status_filter == "Returned" %}selected{% endif %}>
+                    Returned
+                </option>
+
+            </select>
+
+
+            <label>Overdue</label>
+
+            <select name="overdue">
+
+                <option value=""
+                    {% if not overdue_filter %}selected{% endif %}>
+                    All Records
+                </option>
+
+                <option value="yes"
+                    {% if overdue_filter == "yes" %}selected{% endif %}>
+                    Overdue Only
+                </option>
+
+            </select>
+
+
+            <button type="submit">
+                🔎 Search
+            </button>
+
+            <a class="button"
+               href="/admin/reports">
+                Clear Filters
+            </a>
+
+        </form>
+
+    </div>
+
+
+    <h2 class="section-title">
+        📋 Issue History
+    </h2>
+
+
+    {% if reports %}
+
+    <table>
+
+        <tr>
+            <th>Book</th>
+            <th>Student</th>
+            <th>Roll No</th>
+            <th>Issue Date</th>
+            <th>Due Date</th>
+            <th>Return Date</th>
+            <th>Status</th>
+            <th>Fine</th>
+        </tr>
+
+
+        {% for report in reports %}
+
+        <tr>
+
+            <td>{{ report.title }}</td>
+
+            <td>{{ report.full_name }}</td>
+
+            <td>{{ report.roll_no }}</td>
+
+            <td>{{ report.issue_date }}</td>
+
+            <td>{{ report.due_date or "-" }}</td>
+
+            <td>{{ report.return_date or "-" }}</td>
+
+            <td>
+
+                {% if report.status == "Issued" %}
+
+                    📖 Issued
+
+                {% else %}
+
+                    ✅ Returned
+
+                {% endif %}
+
+            </td>
+
+            <td>
+                ₹{{ report.fine or 0 }}
+            </td>
+
+        </tr>
+
+        {% endfor %}
+
+    </table>
+
+    {% else %}
+
+    <div class="card">
+
+        <h3>📋 No Records Found</h3>
+
+        <p>
+            No records match your search or filters.
+        </p>
+
+    </div>
+
+    {% endif %}
+
+
+    <br>
+
+    <a class="button" href="/admin">
+        ← Back to Dashboard
+    </a>
+
+</div>
+{% endblock %}

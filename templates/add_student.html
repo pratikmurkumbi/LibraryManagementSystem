@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% set title='Add Student' %}{% set page_title='Add Student' %}
+{% block content %}
+<div class="modern-page"><div class="form-panel">
+<h2>👨‍🎓 Add New Student</h2>
+<p>Create a student account. A secure temporary password is generated automatically if you leave the password blank.</p>
+{% if error %}<div class="error">{{ error }}</div>{% endif %}
+{% if success %}<div class="success">{{ success }}{% if generated_password %}<br><strong>Username:</strong> {{ created_username }}<br><strong>Temporary password:</strong> <code id="generatedPassword">{{ generated_password }}</code><br><small>Give this password to the student securely. They must change it at first login.</small>{% endif %}</div>{% endif %}
+<form method="POST">
+<div class="form-grid">
+<div><label>Full Name *</label><input type="text" name="full_name" required></div>
+<div><label>Username *</label><input type="text" name="username" required></div>
+<div><label>Temporary Password <span class="muted">(optional)</span></label><input type="password" name="password" minlength="10" placeholder="Leave blank to generate"></div>
+<div><label>Register / Roll Number *</label><input type="text" name="roll_no" required></div>
+<div><label>Course *</label><input type="text" name="course" placeholder="CSE" required></div>
+<div><label>Department</label><input type="text" name="department" placeholder="Computer Science"></div>
+<div><label>Semester</label><select name="semester"><option value="">Select</option>{% for n in range(1,9) %}<option value="{{n}}">Semester {{n}}</option>{% endfor %}</select></div>
+<div><label>Academic Year</label><input type="text" name="academic_year" value="2026-27"></div>
+<div><label>Email</label><input type="email" name="email" placeholder="student@example.com"></div>
+<div><label>Phone</label><input type="tel" name="phone" placeholder="9876543210 or +919876543210"></div>
+</div><button type="submit">➕ Create Student</button></form>
+<div class="resource-actions" style="margin-top:16px"><a class="button" href="{{ url_for('import_students') }}">📥 Import 500+ Students</a><a class="button" href="{{ url_for('manage_students') }}">← Back to Students</a></div>
+</div></div>{% endblock %}

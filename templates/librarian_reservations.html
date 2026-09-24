@@ -1,0 +1,171 @@
+{% extends "base.html" %}
+{% set title='Book Reservations' %}
+{% block content %}
+<!-- MAIN PAGE -->
+
+<div class="dashboard">
+
+    <div class="header">
+
+        <h1>🔖 Book Reservations</h1>
+
+        <p>
+            Review and manage student book reservations
+        </p>
+
+    </div>
+
+
+    {% if reservations %}
+
+    <div class="reservation-card">
+
+        <table>
+
+            <thead>
+
+                <tr>
+                    <th>📖 Book</th>
+                    <th>👨‍🎓 Student</th>
+                    <th>🎓 Roll No</th>
+                    <th>📅 Date</th>
+                    <th>📌 Status</th>
+                    <th>⚙️ Action</th>
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+            {% for reservation in reservations %}
+
+                <tr>
+
+                    <td>
+                        <strong>{{ reservation.title }}</strong>
+                    </td>
+
+                    <td>
+                        {{ reservation.full_name }}
+                    </td>
+
+                    <td>
+                        {{ reservation.roll_no }}
+                    </td>
+
+                    <td>
+                        {{ reservation.reservation_date }}
+                    </td>
+
+                    <td>
+
+                        {% if reservation.status == "Pending" %}
+
+                            <span class="status pending">
+                                ⏳ Pending
+                            </span>
+
+                        {% elif reservation.status == "Approved" %}
+
+                            <span class="status approved">
+                                ✅ Approved
+                            </span>
+
+                        {% elif reservation.status == "Rejected" %}
+
+                            <span class="status rejected">
+                                ❌ Rejected
+                            </span>
+
+                        {% elif reservation.status == "Cancelled" %}
+
+                            <span class="status cancelled">
+                                🚫 Cancelled
+                            </span>
+
+                        {% else %}
+
+                            <span class="status">
+                                {{ reservation.status }}
+                            </span>
+
+                        {% endif %}
+
+                    </td>
+
+                    <td>
+
+                        {% if reservation.status == "Pending" %}
+
+                        <div class="actions">
+
+                            <form method="POST"
+                                  action="/librarian/reservations/approve/{{ reservation.id }}">
+
+                                <button
+                                    type="submit"
+                                    class="action-btn approve">
+                                    ✅ Approve
+                                </button>
+
+                            </form>
+
+
+                            <form method="POST"
+                                  action="/librarian/reservations/reject/{{ reservation.id }}">
+
+                                <button
+                                    type="submit"
+                                    class="action-btn reject">
+                                    ❌ Reject
+                                </button>
+
+                            </form>
+
+                        </div>
+
+                        {% else %}
+
+                            <span style="color:#999;">
+                                No action
+                            </span>
+
+                        {% endif %}
+
+                    </td>
+
+                </tr>
+
+            {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+    {% else %}
+
+    <div class="empty-card">
+
+        <div class="empty-icon">
+            🔖
+        </div>
+
+        <h2>No Reservations</h2>
+
+        <p>
+            There are currently no book reservations.
+        </p>
+
+    </div>
+
+    {% endif %}
+
+
+    <a class="back" href="/librarian">
+        ← Back to Dashboard
+    </a>
+
+</div>
+{% endblock %}

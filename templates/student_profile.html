@@ -1,0 +1,120 @@
+{% extends "base.html" %}
+{% set title='My Profile' %}
+{% block content %}
+
+<div class="dashboard">
+
+    <h1>👤 My Profile</h1>
+
+    <div class="profile-card">
+
+        {% if student.profile_image %}
+
+            <img
+                class="my-profile-photo"
+                src="{{ url_for('static', filename='uploads/students/' + student.profile_image) }}"
+                onclick="openProfilePhoto(this.src)"
+                alt="Profile Photo">
+
+        {% else %}
+
+            <div class="my-profile-icon">
+                👨‍🎓
+            </div>
+
+        {% endif %}
+
+        <h2>{{ student.full_name }}</h2>
+
+        <div class="profile-row">
+            <strong>Username</strong>
+            <span>{{ student.username }}</span>
+        </div>
+
+        <div class="profile-row">
+            <strong>Roll Number</strong>
+            <span>{{ student.roll_no }}</span>
+        </div>
+
+        <div class="profile-row">
+            <strong>Course</strong>
+            <span>{{ student.course }}</span>
+        </div>
+
+        <div class="profile-row">
+            <strong>Semester</strong>
+            <span>{{ student.semester }}</span>
+        </div>
+
+        <div class="profile-row">
+            <strong>Academic Year</strong>
+            <span>{{ student.academic_year }}</span>
+        </div>
+
+    </div>
+
+    <div class="profile-buttons">
+
+        <a class="button" href="/student/profile/edit">
+            ✏️ Edit My Profile
+        </a>
+
+        <a class="button" href="/change-password">
+            🔐 Change Password
+        </a>
+
+    </div>
+
+    <br>
+
+    <a href="/student">
+        ← Back to Dashboard
+    </a>
+
+</div>
+
+
+<div id="profilePhotoModal"
+     class="profile-photo-modal"
+     onclick="closeProfilePhoto(event)">
+
+    <button class="close-profile-photo"
+            onclick="closeProfilePhoto(event)">
+        ×
+    </button>
+
+    <img id="largeProfilePhoto" src="" alt="Profile Photo">
+
+</div>
+
+
+<script>
+
+function openProfilePhoto(src) {
+    const modal = document.getElementById("profilePhotoModal");
+    const image = document.getElementById("largeProfilePhoto");
+
+    image.src = src;
+    modal.classList.add("show");
+}
+
+function closeProfilePhoto(event) {
+
+    if (
+        event.target.id === "profilePhotoModal" ||
+        event.target.classList.contains("close-profile-photo")
+    ) {
+        document.getElementById("profilePhotoModal")
+            .classList.remove("show");
+    }
+}
+
+document.addEventListener("keydown", function(event) {
+    if (event.key === "Escape") {
+        document.getElementById("profilePhotoModal")
+            .classList.remove("show");
+    }
+});
+
+</script>
+{% endblock %}
